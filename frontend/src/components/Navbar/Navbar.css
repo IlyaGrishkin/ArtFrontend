@@ -1,0 +1,11 @@
+.app-wrapper>nav {
+    grid-column: 1/3;
+    grid-row: 2/13;
+    background-color:chartreuse;
+  }
+  
+.avatar {
+  position: absolute;
+  right: 2.0%;
+}
+  

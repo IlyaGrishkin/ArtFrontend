@@ -1,0 +1,22 @@
+.sidebar {
+    grid-column: 1/4;
+    max-width: 100vh;
+    padding-left: 8%;
+}
+
+.topic-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.topic-wrapper h4{
+    margin-left: 8px;
+}
+
+.duration-wrapper h4{
+    margin-left: 8px;
+}
+
+.number-wrapper h4{
+    margin-left: 8px;
+}

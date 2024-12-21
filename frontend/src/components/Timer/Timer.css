@@ -1,0 +1,30 @@
+h1 {
+    font-size: 40px;
+    padding-bottom: 7px;
+    user-select: none;
+}
+
+.timer {
+    display: flex;
+    justify-content: right;
+    column-gap: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+ 
+ 
+
+@media (max-width: 1000px) {
+    h1 {
+        font-size: 28px;
+        margin-top: 18.5px;
+    }
+}
+
+@media (max-width: 700px) {
+    h1 {
+        font-size: 20px;
+        margin-top: 16px;
+    }
+}

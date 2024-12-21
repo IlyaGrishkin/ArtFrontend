@@ -1,0 +1,139 @@
+
+
+.test-screen {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.my-card {
+  grid-column: 3/11;
+  display: flex;
+  justify-content: center;
+}
+
+.myCard {
+  max-width: 50%;
+}
+
+.test-nav {
+  grid-column: 1/3;
+  height: 80%;
+}
+
+ 
+
+.timer-wrap {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-info {
+  background-color: aliceblue;
+  border-radius: 20px;
+  margin-top: 5px;
+  
+}
+
+.timer-info p{
+  padding: 20px;
+  padding-left: 30px;
+   
+}
+
+.timer-main-wrap {
+  grid-column: 11/13;
+  display: inline;
+}
+
+.timer img {
+  width: 40px;
+  height: 40px;
+}
+
+
+ 
+.top-wrap{
+  grid-column: 3/11;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timer {
+  align-items: center;
+}
+.timer h2{
+  width: 85px;
+}
+
+@media (max-width: 1200px) and (min-width: 760px){
+  .timer h2{
+    font-size: 25px;
+    margin-top: 2px;
+    width: 60px;
+  }
+  
+  .myCard {
+    max-width: 70%;
+  }
+  .timer-info p{
+    padding: 20px;
+    padding-left: 30px;
+    font-size: 80%;
+  }
+
+  .timer img {
+    width: 35px;
+    height: 35px;
+  }
+  
+}
+
+@media (max-width: 760px) and (min-width: 600px){
+  .timer h2{
+    font-size: 25px;
+    width: 55px;
+  }
+  .myCard {
+    max-width: 80%;
+  }
+
+  .timer img {
+    width: 30px;
+    height: 30px;
+  }
+}
+ 
+
+@media (max-width: 600px){
+  
+  .timer h2 {
+    font-size: 22px;
+    margin-top: 0px;
+    width: 44px;
+  }
+   
+  .test-nav {
+    grid-column: 2/12;
+  }
+
+ 
+  .my-card {
+    grid-column: 2/12;
+  }
+
+  .timer {
+    grid-column: 9/12;
+    column-gap: 5px;
+  }
+  
+  .myCard {
+    max-width: 90%;
+  }
+
+  .timer img {
+    width: 28px;
+    height: 28px;
+  }
+ 
+}
