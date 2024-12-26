@@ -55,7 +55,7 @@ function ConfirmForm() {
                 localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
                 localStorage.setItem('expires', JSON.stringify(expires))
             });
-            window.location.href = "http://localhost:3000/login/check/results/"
+            window.location.href = "http://localhost:3000/"
     }   
 
     useEffect(() => {

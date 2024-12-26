@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Card, ListGroup, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { getAPIData, addAnswer, results, getTimeFromServer } from '../../redux/reduxIndex';
 import { useParams } from 'react-router-dom';
 import './Timer.css';
 
 
-let t = Date.now()
-
-function getStartTime() {
-    return t
-}
-
+ 
 
 function Timer(props) {
 
     if (!localStorage.getItem("testTime")) {
-        localStorage.setItem("testTime", getStartTime())
+        localStorage.setItem("testTime", 10000)
     }
 
     const startTime = localStorage.getItem("testTime")
@@ -25,7 +19,7 @@ function Timer(props) {
 
 
     function countdown() {
-        let delta = Math.floor((Date.now() - startTime) / 1000);
+        let delta = Math.floor((Date.now() / 1000)) - startTime;
         setTime(Math.max(Math.floor((duration - delta)), 0))
     }
 

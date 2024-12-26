@@ -3,7 +3,7 @@ import './App.css';
 import AppCard from './components/Card/Card';
 import AppNavbar from './components/Navbar/Navbar';
 import MainScreen from './components/MainScreen/MainScreen';
-import { addAnswer, test } from './redux/reduxIndex';
+
 import TestNavbar from './components/TestNavbar/TestNavbar';
 import { TestResults } from './components/TestResults/TestResults';
 import { ViewingCard } from './components/ViewingCard/ViewingCard';
@@ -13,6 +13,8 @@ import BasicScreen from './components/BasicScreen/BasicScreen';
 import Timer from './components/Timer/Timer';
 import TestScreen from './components/TestScreen/TestScreen';
 import { Home } from './components/Home/Home';
+import { handleToken } from './tools/lookups';
+import { Logout } from './components/Logout/Logout';
 
 
 
@@ -51,6 +53,7 @@ const App = () => {
               <Route path="/login/check/" element={<ConfirmForm/>}/>
               <Route path="/main/" element={<BasicScreen/>}/>
               <Route path="/timer/" element={<Timer/>}/>
+              <Route path="/logout/" element={<Logout/>}/>
 
               
 

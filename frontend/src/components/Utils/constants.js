@@ -26,3 +26,8 @@ export const BootstrapBreakpoints = {
     'xl': 1200,
     'xxl': 1400
 }
+
+
+export const URLS = {
+    HOME: "http://localhost:3000",
+}

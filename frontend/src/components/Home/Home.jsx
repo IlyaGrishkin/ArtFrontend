@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Card } from 'react-bootstrap';
 import axios from 'axios';
+import { handleToken } from '../../tools/lookups';
 
 export function Home() {
     if (!JSON.parse(localStorage.getItem("filterTopic"))) {
@@ -90,6 +91,8 @@ export function Home() {
     }
 
     function handleChangeDuration(t) {
+        //const email = JSON.parse(localStorage.getItem(""))
+
         const newChecked = {...checkedDuration}
 
         newChecked[t] = !checkedDuration[t]
@@ -103,7 +106,7 @@ export function Home() {
 
         let newTestList = []
         for (let test of allTests) {
-            if (avaibleTime.indexOf(test.work_time) != -1 && checkedTopic[test.subject]) {
+            if (filter(test)) {
                 newTestList.push(test)
             }
         }
@@ -130,11 +133,13 @@ export function Home() {
 
 
 
-    const apiUrl = `http://localhost:8000/api/v1/tests/`;
+    const apiUrl = `http://localhost:8000/api/v1/tests/`
+    const profileInfo = `http://localhost:8000/api/v1/customers/get_info`
 
     useEffect(() => {
         axios.get(apiUrl).then((resp) => {
             const serverData = resp.data;
+            console.log(serverData)
             setTests(serverData)
 
           
@@ -149,16 +154,43 @@ export function Home() {
             setAllTests(serverData.data.items)
         })
 
+        if (JSON.parse(localStorage.getItem("accessToken"))) {
+            
+            let config = {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+                }
+            }
+
+            axios.post(profileInfo,
+                {},
+                config
+            )
+
+            .then(resp => {
+                const serverData = resp.data;
+                console.log(serverData)
+                localStorage.setItem("avatar", JSON.stringify("http://localhost:8000" + serverData.data.avatar_path))
+            })
+
+        }
+
+        
+
+
     }, [])
 
 
 
     function handleTestStart(testID) {
         if (JSON.parse(localStorage.getItem("accessToken"))) {
+            handleToken()
             const apiUrl = `http://localhost:8000/api/v1/tests/create/new_attempt`;
             let config = {
                 headers: {
-                    Authorization: JSON.parse(localStorage.getItem("accessToken"))
+                    "Access-Control-Allow-Origin": "*",
+                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
                 }
             }
             axios.post(apiUrl,
@@ -170,10 +202,21 @@ export function Home() {
 
                 .then((resp) => {
                     const serverData = resp.data;
-                    console.log(serverData);
-                    //localStorage.setItem("timeStart", JSON.stringify(parseInt((new Date(serverData.data.created_at).getTime() / 1000).toFixed(0))))
+                    console.log(serverData)
+                    localStorage.setItem("testTime",  Math.floor(new Date(serverData.data.created_at).getTime() / 1000))
                     localStorage.setItem("answers", JSON.stringify(serverData.data.user_answers))
+                    let test;
+                    for (let item of testList) {
+                        if (item.id == testID) {
+                            test = item;
+                        }
+                    }
+                    localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
+                    localStorage.setItem("testRunning", JSON.stringify(testID))
                 })
+        }
+        else {
+            alert("Для прохождения теста необходимо авторизоваться")
         }
     }
 
@@ -208,38 +251,38 @@ export function Home() {
                                         </div></Offcanvas.Title>
                                 </Offcanvas.Header>
                                 <Offcanvas.Body>
-                                    <div className='sidebar'>
+                                <div className='sidebar'>
+                            
+                                <div className='topic-wrapper'>
+                                    <h4>Тема</h4>
+                                    <ul>
+                                        {topics.TOPICS.map(t => <li><Checkbox className="checkbox" checked={checkedTopic[t]} onChange={() => handleChangeTopic(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                    </ul>
+                                </div>
+                                <div className='duration-wrapper'>
+                                    <h4>Длительность</h4>
+                                    <ul>
+                                        {testDurations.map(t => <li><Checkbox className="checkbox" checked={checkedDuration[t]} onChange={() => handleChangeDuration(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                    </ul>
+                                </div>
+                                <div className='number-wrapper'>
+                                    <h4>Количество вопросов</h4>
+                                    <ul>
+                                        {questionsNumber.map(n => <li><Checkbox className="checkbox" checked={checkedNumber[n]} onChange={() => handleChangeNumber(n)} inputProps={{ 'aria-label': 'controlled' }} /> {n} </li>)}
+                                    </ul>
+                                </div>
 
-                                        <div className='topic-wrapper'>
-                                            <h4>Тема</h4>
-                                            <ul>
-                                                {topics.TOPICS.map(t => <li><Checkbox className="checkbox" checked={true} onChange={() => { }} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
-                                            </ul>
-                                        </div>
-                                        <div className='duration-wrapper'>
-                                            <h4>Длительность</h4>
-                                            <ul>
-                                                {testDurations.map(t => <li><Checkbox className="checkbox" checked={true} onChange={() => { }} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
-                                            </ul>
-                                        </div>
-                                        <div className='number-wrapper'>
-                                            <h4>Количество вопросов</h4>
-                                            <ul>
-                                                {questionsNumber.map(n => <li><Checkbox className="checkbox" checked={true} onChange={() => { }} inputProps={{ 'aria-label': 'controlled' }} /> {n} </li>)}
-                                            </ul>
-                                        </div>
-
-                                    </div>
+                            </div>
                                 </Offcanvas.Body>
                             </Offcanvas>
                         </div>
                     </div>
                     <div className="row">
 
-                        {testList.map((test) =>
+                        {testList.length > 0 ? testList.map((test) =>
                             <div className="col-12 col-md-6 d-flex justify-content-center">
                                 <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => handleTestStart(test.id)}>
-                                    <Card.Img variant="top" src="http://127.0.0.1:8080/1677481342_bronk-club-p-otkritki-tomas-kinkeid-instagram-25.jpg" />
+                                    <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                     <Card.Body>
                                         <Card.Title className='card-title'>{test.title}</Card.Title>
                                         <Card.Text>
@@ -267,7 +310,7 @@ export function Home() {
 
                             </div>
 
-                        )}
+                        ): <h4>{"Ничего не нашлось :("}</h4>}
 
                     </div>
                 </div>
@@ -314,10 +357,10 @@ export function Home() {
                         </div>
                         <div className="col-8">
                             <div className="row">
-                                {testList.map((test) =>
+                                {testList.length > 0 ? testList.map((test) =>
                                     <div className={normalStyle}>
                                         <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => handleTestStart(test.id)}>
-                                            <Card.Img variant="top" src="http://127.0.0.1:8080/1677481342_bronk-club-p-otkritki-tomas-kinkeid-instagram-25.jpg" />
+                                            <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                             <Card.Body>
                                                 <Card.Title className='card-title'>{test.title}</Card.Title>
                                                 <Card.Text>
@@ -345,7 +388,7 @@ export function Home() {
 
                                     </div>
 
-                                )}
+                                ) : <h4>{"Ничего не нашлось :("}</h4>}
                             </div>
                         </div>
                     </div>

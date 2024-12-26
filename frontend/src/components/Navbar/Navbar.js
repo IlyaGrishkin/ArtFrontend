@@ -19,7 +19,9 @@ function AppNavbar() {
           
            
           <Nav.Link href="/profile/" className='avatar'>
-            <Avatar src="https://avatars.mds.yandex.net/i?id=b8dd7d668d87124fe43353f8ddb108d5_l-5023807-images-thumbs&n=13"/>
+            <Avatar src={
+              localStorage.getItem("avatar") ? localStorage.getItem("avatar") :
+              ""}/>
           </Nav.Link>
           
             

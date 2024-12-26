@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios'
+import {URLS} from '../Utils/constants'
 import './Card.css';
 
 
@@ -64,7 +65,8 @@ function AppCard(props) {
             const apiUrl = `http://localhost:8000/api/v1/tests/update/attempt`;
             let config = {
                 headers: {
-                    Authorization: JSON.parse(localStorage.getItem("accessToken"))
+                    "Access-Control-Allow-Origin": "*",
+                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
                 }
             }
             axios.post(apiUrl, 
@@ -83,14 +85,14 @@ function AppCard(props) {
             }) 
         }
 
-
+        
 
 
         return (
             <div className='myCard'>
                 <Card className='my-3'>
                     <div>
-                        <Card.Img variant="top" src="https://avatars.mds.yandex.net/i?id=b8dd7d668d87124fe43353f8ddb108d5_l-5023807-images-thumbs&n=13" />
+                        <Card.Img variant="top" src={props.picture ? "http://127.0.0.1:8000" + props.picture : "https://avatars.mds.yandex.net/i?id=b8dd7d668d87124fe43353f8ddb108d5_l-5023807-images-thumbs&n=13"} />
                         <Card.Body>
                             <Card.Title>{ }</Card.Title>
                             <Card.Text>
@@ -110,7 +112,18 @@ function AppCard(props) {
                         </ListGroup>
 
                         <Card.Body style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <Button onClick={() => {addAnswer(id, active); sendAnswers()}} className="w-50" variant='outline-success' >Next</Button>
+                            {
+                                questionsQuantity == id ? 
+                                <>
+                                 <Button onClick={() => {addAnswer(id, active); sendAnswers()}} className="w-50" variant='outline-success' >Сохранить</Button>
+                                 <Button onClick={() => {addAnswer(id, active); sendAnswers(); window.location.href = `http://localhost:3000/${testID}/results/`}} className="w-50" variant='outline-success' >Завершить тест</Button> 
+                                </>
+                                :
+                                <Button onClick={() => {addAnswer(id, active); sendAnswers(); window.location.href = `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/`}} className="w-50" variant='outline-success' >Далее</Button>
+                            }
+                            
+                                
+                                           
                         </Card.Body>
                     
                     </div>

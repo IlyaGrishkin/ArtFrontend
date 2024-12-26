@@ -1,7 +1,7 @@
 import React from 'react';
 import './TestNavbar.css'
 import { Button } from 'react-bootstrap';
-import { getAPIData } from '../../redux/reduxIndex';
+
 import { useParams } from 'react-router-dom';
 
 

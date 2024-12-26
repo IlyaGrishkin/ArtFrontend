@@ -18,6 +18,7 @@ function TestScreen(props) {
     const [question, setQuestion] = useState([])
     const [answers, setAnswers] = useState([])
     const [questionQuantity, setQuestionsQuantity] = useState([])
+    const [pictureURL, setPictureURL] = useState("")
 
     const [show, setShow] = useState(false)
     const [timerInfo, setTimerInfo] = useState(false)
@@ -32,11 +33,11 @@ function TestScreen(props) {
         }
         return res
     }
-
+    
+    const testDuration = parseInt(JSON.parse(localStorage.getItem("testDuration")))
 
 
     useEffect(() => {
-        handleToken()
         const apiUrl = `http://localhost:8000/api/v1/tests/${testID}`;
         axios.get(apiUrl).then((resp) => {
           const serverData = resp.data;
@@ -45,6 +46,7 @@ function TestScreen(props) {
           setQuestion(serverData.data.items[id - 1])
           setAnswers(serverData.data.items[id - 1].answers)
           setQuestionsQuantity(serverData.data.items.length)
+          setPictureURL(serverData.data.items[id - 1].picture)
         });
       }, []);
 
@@ -53,10 +55,7 @@ function TestScreen(props) {
 
     
     function handleTimeout(testId) {
-        const ans = JSON.parse(localStorage.getItem("answers"))
-        const viewData = {"testID": testID, "answers": ans}
         localStorage.removeItem("testTime")
-        localStorage.setItem("viewingData",  JSON.stringify(viewData))
         localStorage.removeItem("answers")
         localStorage.removeItem("testRunning");
         window.location.href = `http://localhost:3000/${testId}/results/`
@@ -68,15 +67,15 @@ function TestScreen(props) {
             <div className='test-screen'>
                 <div className="top-wrap">
                     <Button className='nav-button my-3' onClick={() => setShow(!show)}>Навигация</Button>
-                    <Timer duration={20000} onTimeout={() => handleTimeout(testID)}/>
+                    <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)}/>
                 </div>
                 
                 <div className='m-2 test-nav' style={{display: show ? 'block' : 'none'}}>
-                    <TestNavbar questions_quantity={30} completed={getCompleted()}/>
+                    <TestNavbar questions_quantity={questionQuantity} completed={getCompleted()}/>
                 </div>
                 
                 <div className='my-card'>
-                   <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers}/>
+                   <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL}/>
                 </div>
                 
             </div>
@@ -89,14 +88,14 @@ function TestScreen(props) {
         <div className='test-screen'>
             <div className='m-2 test-nav'>
                 <h3>Навигация</h3>
-                <TestNavbar questions_quantity={30} completed={getCompleted()}/>
+                <TestNavbar questions_quantity={questionQuantity} completed={getCompleted()}/>
             </div>
             <div className='my-card'>
-               <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers}/>
+               <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL}/>
             </div>
             <div className="timer-main-wrap">
                 <div className="timer-wrap" onMouseOver={() => setTimerInfo(true)} onMouseOut={() => setTimerInfo(false)}>
-                    <Timer duration={20000} onTimeout={() => handleTimeout(testID)}/>
+                    <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)}/>
                     <div className="timer-info" style={{display: timerInfo ? 'block' : 'none'}}>
                         <p>По окончании таймера <br/> Ваши ответы отправятся автоматически</p>
                     </div>
