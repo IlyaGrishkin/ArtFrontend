@@ -12,13 +12,18 @@ function TestNavbar(props) {
     const { id } = useParams();
     const completed = props.completed;
     const { testID } = useParams();
+    
+    let urlBase = 'card'
+    if (props.viewing)  {
+        urlBase = 'viewing'
+    }
 
     let arr = [];
 
     for (let i = 1; i <= questions_quantity; i++) {
         if (completed.indexOf(i) != -1) {
             arr.push(
-                    <a href={`/card/${testID}/${i}/`}>
+                    <a href={`/${urlBase}/${testID}/${i}/`}>
                         <div className='square active'>
                             {i}
                         </div>
@@ -27,7 +32,7 @@ function TestNavbar(props) {
         }
         else {
             arr.push(
-                <a href={`/card/${testID}/${i}/`}>
+                <a href={`/${urlBase}/${testID}/${i}/`}>
                     <div className='square'>
                         {i}
                     </div>

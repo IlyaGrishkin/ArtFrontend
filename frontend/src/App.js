@@ -15,6 +15,7 @@ import TestScreen from './components/TestScreen/TestScreen';
 import { Home } from './components/Home/Home';
 import { handleToken } from './tools/lookups';
 import { Logout } from './components/Logout/Logout';
+ 
 
 
 
@@ -40,14 +41,9 @@ const App = () => {
                 <TestResults/>
                 } />
               <Route path="/viewing/:testID/:id/" element={
-                 <div className='test-screen'>
-                 <div className='m-2 test-nav'>
-                   <TestNavbar viewing={true}/>
-                 </div>
-                 <div className='my-card'>
+          
                     <ViewingCard/>
-                 </div>
-               </div>
+      
                 }/>
               <Route path="/login/" element={<LoginForm/>}/>
               <Route path="/login/check/" element={<ConfirmForm/>}/>

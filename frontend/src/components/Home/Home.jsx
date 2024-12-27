@@ -134,7 +134,7 @@ export function Home() {
 
 
     const apiUrl = `http://localhost:8000/api/v1/tests/`
-    const profileInfo = `http://localhost:8000/api/v1/customers/get_info`
+    
 
     useEffect(() => {
         axios.get(apiUrl).then((resp) => {
@@ -154,28 +154,7 @@ export function Home() {
             setAllTests(serverData.data.items)
         })
 
-        if (JSON.parse(localStorage.getItem("accessToken"))) {
-            
-            let config = {
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
-                }
-            }
-
-            axios.post(profileInfo,
-                {},
-                config
-            )
-
-            .then(resp => {
-                const serverData = resp.data;
-                console.log(serverData)
-                localStorage.setItem("avatar", JSON.stringify("http://localhost:8000" + serverData.data.avatar_path))
-            })
-
-        }
-
+        
         
 
 
@@ -213,6 +192,7 @@ export function Home() {
                     }
                     localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
                     localStorage.setItem("testRunning", JSON.stringify(testID))
+                    window.location.href = `http://localhost:3000/card/${testID}/1/`
                 })
         }
         else {

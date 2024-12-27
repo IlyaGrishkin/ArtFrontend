@@ -1,10 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Navbar, Container, Nav } from 'react-bootstrap';
 import './Navbar.css'
 import { Avatar } from '@mui/material';
+import axios from 'axios';
 
 
 function AppNavbar() {
+
+    const [avatar, setAvatar] = useState("")
+
+    useEffect(() => {
+      const profileInfo = `http://localhost:8000/api/v1/customers/get_info`
+      if (JSON.parse(localStorage.getItem("accessToken"))) {
+            
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+
+        axios.post(profileInfo,
+            {},
+            config
+        )
+
+        .then(resp => {
+            const serverData = resp.data;
+            console.log(serverData)
+            localStorage.setItem("avatar", JSON.stringify("http://localhost:8000" + serverData.data.avatar_path))
+            setAvatar("http://localhost:8000" + serverData.data.avatar_path)
+        })
+
+    }
+
+    }, [])
     return (
       <>
         <Navbar bg="primary" data-bs-theme="dark">
@@ -19,9 +49,7 @@ function AppNavbar() {
           
            
           <Nav.Link href="/profile/" className='avatar'>
-            <Avatar src={
-              localStorage.getItem("avatar") ? localStorage.getItem("avatar") :
-              ""}/>
+            <Avatar src={avatar}/>
           </Nav.Link>
           
             

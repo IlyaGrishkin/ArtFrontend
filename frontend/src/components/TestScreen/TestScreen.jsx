@@ -62,50 +62,37 @@ function TestScreen(props) {
         
     }  
     
-    if (window.screen.width < 600) {
-        return (
-            <div className='test-screen'>
-                <div className="top-wrap">
-                    <Button className='nav-button my-3' onClick={() => setShow(!show)}>Навигация</Button>
-                    <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)}/>
-                </div>
-                
-                <div className='m-2 test-nav' style={{display: show ? 'block' : 'none'}}>
-                    <TestNavbar questions_quantity={questionQuantity} completed={getCompleted()}/>
-                </div>
-                
-                <div className='my-card'>
-                   <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL}/>
-                </div>
-                
-            </div>
-        )
-    }
-    else {
+    
+    
 
     
     return (
-        <div className='test-screen'>
-            <div className='m-2 test-nav'>
-                <h3>Навигация</h3>
-                <TestNavbar questions_quantity={questionQuantity} completed={getCompleted()}/>
-            </div>
-            <div className='my-card'>
-               <AppCard id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL}/>
-            </div>
-            <div className="timer-main-wrap">
-                <div className="timer-wrap" onMouseOver={() => setTimerInfo(true)} onMouseOut={() => setTimerInfo(false)}>
-                    <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)}/>
-                    <div className="timer-info" style={{display: timerInfo ? 'block' : 'none'}}>
-                        <p>По окончании таймера <br/> Ваши ответы отправятся автоматически</p>
+        <div className='container-fluid'>
+            <div className="row d-flex justify-content-center">
+                <div className='col-5 col-sm-4 col-md px-0 px-sm-4'>
+                    <h3>Навигация</h3>
+                    <TestNavbar questions_quantity={questionQuantity} completed={getCompleted()}/>
+                </div>
+                
+                <div className="col-5 col-sm-4 col-md px-0 px-sm-4 order-md-2">
+                    <div className="timer-wrap" onMouseOver={() => setTimerInfo(true)} onMouseOut={() => setTimerInfo(false)}>
+                        <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)}/>
+                        <div className="timer-info" style={{display: timerInfo ? 'block' : 'none'}}>
+                            <p>По окончании таймера <br/> Ваши ответы отправятся автоматически</p>
+                        </div>
                     </div>
                 </div>
+                <div className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5'>
+                    <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL}/>
+                </div>
+
             </div>
+            
             
             
         </div>
     )
-}
+
     
 
 }

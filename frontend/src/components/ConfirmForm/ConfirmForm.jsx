@@ -56,6 +56,7 @@ function ConfirmForm() {
                 localStorage.setItem('expires', JSON.stringify(expires))
             });
             window.location.href = "http://localhost:3000/"
+            
     }   
 
     useEffect(() => {

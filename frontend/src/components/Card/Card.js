@@ -89,7 +89,7 @@ function AppCard(props) {
 
 
         return (
-            <div className='myCard'>
+             
                 <Card className='my-3'>
                     <div>
                         <Card.Img variant="top" src={props.picture ? "http://127.0.0.1:8000" + props.picture : "https://avatars.mds.yandex.net/i?id=b8dd7d668d87124fe43353f8ddb108d5_l-5023807-images-thumbs&n=13"} />
@@ -129,7 +129,7 @@ function AppCard(props) {
                     </div>
 
                 </Card>
-            </div>
+            
         );
 
 
