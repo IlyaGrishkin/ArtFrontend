@@ -15,7 +15,9 @@ import TestScreen from './components/TestScreen/TestScreen';
 import { Home } from './components/Home/Home';
 import { handleToken } from './tools/lookups';
 import { Logout } from './components/Logout/Logout';
- 
+import { SignUp } from './components/SignUp/SignUp';
+import { Profile } from './components/Profile/Profile';
+
 
 
 
@@ -25,43 +27,40 @@ import { Logout } from './components/Logout/Logout';
 
 
 const App = () => {
+  setInterval(() => handleToken(), 1000)
   return (
     <div className='app-wrapper'>
       <BrowserRouter>
-        <AppNavbar/>
-        
-          <Routes>
-              <Route path="/" element={<Home/>} />
+        <AppNavbar />
 
-              <Route path="/card/:testID/:id" element={
-                <TestScreen/>
-              } />
-              
-              <Route path="/:testID/results/" element={
-                <TestResults/>
-                } />
-              <Route path="/viewing/:testID/:id/" element={
-          
-                    <ViewingCard/>
-      
-                }/>
-              <Route path="/login/" element={<LoginForm/>}/>
-              <Route path="/login/check/" element={<ConfirmForm/>}/>
-              <Route path="/main/" element={<BasicScreen/>}/>
-              <Route path="/timer/" element={<Timer/>}/>
-              <Route path="/logout/" element={<Logout/>}/>
+        <Routes>
+          <Route path="/" element={<Home />} />
 
-              
+          <Route path="/card/:testID/:id" element={<TestScreen />} />
+          <Route path="/:testID/results/" element={<TestResults />} />
+          <Route path="/viewing/:testID/:id/" element={<ViewingCard />} />
+
+          <Route path="/login/" element={<LoginForm />} />
+          <Route path="/login/check/" element={<ConfirmForm />} />
+          <Route path="/logout/" element={<Logout />} />
+
+          <Route path="/signup/" element={<SignUp />} />
+          <Route path="/signup/confirm/" element={<ConfirmForm />} />
+
+          <Route path='/profile/' element={<Profile/>}/>
 
 
-          </Routes>
-       
+
+
+
+        </Routes>
+
       </BrowserRouter>
-      
-     </div>
-   
- 
-    
+
+    </div>
+
+
+
   );
 }
 

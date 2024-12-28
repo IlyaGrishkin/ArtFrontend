@@ -22,12 +22,12 @@ async function getData() {
 }
 
 
-export function handleToken() {
+export async function handleToken() {
     const expires = parseInt(JSON.parse(localStorage.getItem("expires")))
     if (expires) {
         const date = Math.floor(Date.now() / 1000)
         if (date > expires) {
-            getData()
+            await getData()
         }
     }
 }

@@ -153,18 +153,12 @@ export function Home() {
             setTestList(testList)
             setAllTests(serverData.data.items)
         })
-
-        
-        
-
-
     }, [])
 
 
 
     function handleTestStart(testID) {
         if (JSON.parse(localStorage.getItem("accessToken"))) {
-            handleToken()
             const apiUrl = `http://localhost:8000/api/v1/tests/create/new_attempt`;
             let config = {
                 headers: {
@@ -266,7 +260,7 @@ export function Home() {
                                     <Card.Body>
                                         <Card.Title className='card-title'>{test.title}</Card.Title>
                                         <Card.Text>
-                                            {test.description}
+                                            <p className='card-text'>{test.description}</p>
                                         </Card.Text>
                                         <Card.Text>
                                             <div className='timeInfo'>
