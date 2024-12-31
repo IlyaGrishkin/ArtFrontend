@@ -8,4 +8,34 @@
   position: absolute;
   right: 2.0%;
 }
+
+
+
+
+.login-button {
+  border-radius: 42%;
+  padding-left: 50px;
+  padding-right: 50px;
+ 
+  background-color: #1E1E1E;
+  color: white;
+
+  font-weight: 400;
+  font-size: 17px;
+}
+
+.login-button:hover {
+  background-color: grey;
+  color: white;
   
+}
+
+.my-navbar-link {
+  color: #1E1E1E;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.my-navbar-brand {
+  font-weight: 500;
+}

@@ -7,6 +7,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Card } from 'react-bootstrap';
 import axios from 'axios';
 import { handleToken } from '../../tools/lookups';
+import { MyVerticallyCenteredModal } from '../Modal/Modal';
 
 export function Home() {
     if (!JSON.parse(localStorage.getItem("filterTopic"))) {
@@ -16,7 +17,7 @@ export function Home() {
         }
         localStorage.setItem('filterTopic', JSON.stringify(obj))
     }
-    
+
     if (!JSON.parse(localStorage.getItem("filterDuration"))) {
         const obj = {}
         for (let key of testDurations) {
@@ -24,7 +25,7 @@ export function Home() {
         }
         localStorage.setItem('filterDuration', JSON.stringify(obj))
     }
-    
+
     if (!JSON.parse(localStorage.getItem("filterNumber"))) {
         const obj = {}
         for (let key of questionsNumber) {
@@ -32,7 +33,7 @@ export function Home() {
         }
         localStorage.setItem('filterNumber', JSON.stringify(obj))
     }
-    
+
     const [checkedTopic, setCheckedTopic] = useState(JSON.parse(localStorage.getItem('filterTopic')));
 
     const [checkedDuration, setCheckedDuration] = useState(JSON.parse(localStorage.getItem('filterDuration')))
@@ -40,7 +41,7 @@ export function Home() {
     const [checkedNumber, setCheckedNumber] = useState(JSON.parse(localStorage.getItem('filterNumber')))
 
 
-    
+
 
     // offcanvas 
     const [show, setShow] = useState(false);
@@ -50,24 +51,28 @@ export function Home() {
 
     const [tests, setTests] = useState({})
 
-    const [allTests, setAllTests] = useState([]) 
+    const [allTests, setAllTests] = useState([])
     const [testList, setTestList] = useState([])
+
+    const [modalShow, setModalShow] = useState(false)
+    const [title, setTitle] = useState("")
+    const [readyToStart, setReadyToStart] = useState(null)
 
     function filter(test) {
         const topic = JSON.parse(localStorage.getItem('filterTopic'))
         const duration = JSON.parse(localStorage.getItem('filterDuration'))
         const number = JSON.parse(localStorage.getItem('filterNumber'))
-        
+
         let avaibleTime = []
         for (let key in testDurationsStrToNums) {
-            if (duration[key]){
+            if (duration[key]) {
                 avaibleTime.push(...testDurationsStrToNums[key])
             }
         }
-        
+
         let avaibleNumber = []
         for (let key in questionsNumberStrToNum) {
-            if (number[key]){
+            if (number[key]) {
                 avaibleNumber.push(...questionsNumberStrToNum[key])
             }
         }
@@ -77,7 +82,7 @@ export function Home() {
 
 
     function handleChangeTopic(t) {
-        const newChecked = {...checkedTopic}
+        const newChecked = { ...checkedTopic }
         newChecked[t] = !checkedTopic[t]
         localStorage.setItem('filterTopic', JSON.stringify(newChecked))
         let newTestList = []
@@ -87,19 +92,19 @@ export function Home() {
             }
         }
         setCheckedTopic(newChecked)
-        setTestList(newTestList)      
+        setTestList(newTestList)
     }
 
     function handleChangeDuration(t) {
         //const email = JSON.parse(localStorage.getItem(""))
 
-        const newChecked = {...checkedDuration}
+        const newChecked = { ...checkedDuration }
 
         newChecked[t] = !checkedDuration[t]
         localStorage.setItem('filterDuration', JSON.stringify(newChecked))
         let avaibleTime = []
         for (let key in testDurationsStrToNums) {
-            if (newChecked[key]){
+            if (newChecked[key]) {
                 avaibleTime.push(...testDurationsStrToNums[key])
             }
         }
@@ -112,11 +117,11 @@ export function Home() {
         }
         setCheckedDuration(newChecked)
         setTestList(newTestList)
-      
+
     }
-    
+
     function handleChangeNumber(t) {
-        const newChecked = {...checkedNumber}
+        const newChecked = { ...checkedNumber }
         newChecked[t] = !checkedNumber[t]
         localStorage.setItem('filterNumber', JSON.stringify(newChecked))
         let newTestList = []
@@ -134,7 +139,7 @@ export function Home() {
 
 
     const apiUrl = `http://localhost:8000/api/v1/tests/`
-    
+
 
     useEffect(() => {
         axios.get(apiUrl).then((resp) => {
@@ -142,7 +147,7 @@ export function Home() {
             console.log(serverData)
             setTests(serverData)
 
-          
+
             const tests = serverData.data.items
             let testList = []
             for (let test of tests) {
@@ -159,47 +164,55 @@ export function Home() {
 
     function handleTestStart(testID) {
         if (JSON.parse(localStorage.getItem("accessToken"))) {
-            const apiUrl = `http://localhost:8000/api/v1/tests/create/new_attempt`;
-            let config = {
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
-                }
-            }
-            axios.post(apiUrl,
-                {
-                    test_id: testID
-                },
-                config
-            )
-
-                .then((resp) => {
-                    const serverData = resp.data;
-                    console.log(serverData)
-                    localStorage.setItem("testTime",  Math.floor(new Date(serverData.data.created_at).getTime() / 1000))
-                    localStorage.setItem("answers", JSON.stringify(serverData.data.user_answers))
-                    let test;
-                    for (let item of testList) {
-                        if (item.id == testID) {
-                            test = item;
-                        }
+            if (JSON.parse(localStorage.getItem("testRunning")) != testID) {
+                const apiUrl = `http://localhost:8000/api/v1/tests/create/new_attempt`;
+                let config = {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
                     }
-                    localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
-                    localStorage.setItem("testRunning", JSON.stringify(testID))
-                    window.location.href = `http://localhost:3000/card/${testID}/1/`
-                })
+                }
+                axios.post(apiUrl,
+                    {
+                        test_id: testID
+                    },
+                    config
+                )
+
+                    .then((resp) => {
+                        const serverData = resp.data;
+                        console.log(serverData)
+                        localStorage.setItem("testTime", Math.floor(new Date(serverData.data.created_at).getTime() / 1000))
+                        localStorage.setItem("answers", JSON.stringify(serverData.data.user_answers))
+                        let test;
+                        for (let item of testList) {
+                            if (item.id == testID) {
+                                test = item;
+                            }
+                        }
+                        localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
+                        localStorage.setItem("testRunning", JSON.stringify(testID))
+                        window.location.href = `http://localhost:3000/card/${testID}/1/`
+                    })
+
+            }
+            else {
+                alert("Вы уже проходите тест")
+            }
+
         }
         else {
             alert("Для прохождения теста необходимо авторизоваться")
         }
     }
 
-     
-    
+
+
     const noneStyle = 'd-none'
 
     const normalStyle = "col-lg-6 col-xl-4 d-flex justify-content-center"
 
+    //handleTestStart(test.id)
 
     if (window.screen.width < BootstrapBreakpoints['lg']) {
         return (
@@ -225,28 +238,28 @@ export function Home() {
                                         </div></Offcanvas.Title>
                                 </Offcanvas.Header>
                                 <Offcanvas.Body>
-                                <div className='sidebar'>
-                            
-                                <div className='topic-wrapper'>
-                                    <h4>Тема</h4>
-                                    <ul>
-                                        {topics.TOPICS.map(t => <li><Checkbox className="checkbox" checked={checkedTopic[t]} onChange={() => handleChangeTopic(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
-                                    </ul>
-                                </div>
-                                <div className='duration-wrapper'>
-                                    <h4>Длительность</h4>
-                                    <ul>
-                                        {testDurations.map(t => <li><Checkbox className="checkbox" checked={checkedDuration[t]} onChange={() => handleChangeDuration(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
-                                    </ul>
-                                </div>
-                                <div className='number-wrapper'>
-                                    <h4>Количество вопросов</h4>
-                                    <ul>
-                                        {questionsNumber.map(n => <li><Checkbox className="checkbox" checked={checkedNumber[n]} onChange={() => handleChangeNumber(n)} inputProps={{ 'aria-label': 'controlled' }} /> {n} </li>)}
-                                    </ul>
-                                </div>
+                                    <div className='sidebar'>
 
-                            </div>
+                                        <div className='topic-wrapper'>
+                                            <h4>Тема</h4>
+                                            <ul>
+                                                {topics.TOPICS.map(t => <li><Checkbox className="checkbox" checked={checkedTopic[t]} onChange={() => handleChangeTopic(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                            </ul>
+                                        </div>
+                                        <div className='duration-wrapper'>
+                                            <h4>Длительность</h4>
+                                            <ul>
+                                                {testDurations.map(t => <li><Checkbox className="checkbox" checked={checkedDuration[t]} onChange={() => handleChangeDuration(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                            </ul>
+                                        </div>
+                                        <div className='number-wrapper'>
+                                            <h4>Количество вопросов</h4>
+                                            <ul>
+                                                {questionsNumber.map(n => <li><Checkbox className="checkbox" checked={checkedNumber[n]} onChange={() => handleChangeNumber(n)} inputProps={{ 'aria-label': 'controlled' }} /> {n} </li>)}
+                                            </ul>
+                                        </div>
+
+                                    </div>
                                 </Offcanvas.Body>
                             </Offcanvas>
                         </div>
@@ -255,7 +268,7 @@ export function Home() {
 
                         {testList.length > 0 ? testList.map((test) =>
                             <div className="col-12 col-md-6 d-flex justify-content-center">
-                                <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => handleTestStart(test.id)}>
+                                <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0, transitionDuration: 0.3}} onClick={() => {setTitle(test.title); setModalShow(true); setReadyToStart(test.id)}}>
                                     <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                     <Card.Body>
                                         <Card.Title className='card-title'>{test.title}</Card.Title>
@@ -281,16 +294,34 @@ export function Home() {
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
-
+                                <MyVerticallyCenteredModal
+                                            show={modalShow}
+                                            onHide={() => setModalShow(false)}
+                                            testName={title}
+                                            onTestStart={() => handleTestStart(readyToStart)}
+                                    />
                             </div>
 
-                        ): <h4>{"Ничего не нашлось :("}</h4>}
+                        ) : <h4>{"Ничего не нашлось :("}</h4>}
 
                     </div>
                 </div>
+                 
+
+                
             </div>
         )
     }
+
+
+    //  ДРУГАЯ ВЕРСТКА
+    //  ДРУГАЯ ВЕРСТКА
+    //  ДРУГАЯ ВЕРСТКА
+    //  ДРУГАЯ ВЕРСТКА
+    //  ДРУГАЯ ВЕРСТКА
+
+    
+
     else {
         return (
             <div className="home-wrapper-large">
@@ -333,7 +364,7 @@ export function Home() {
                             <div className="row">
                                 {testList.length > 0 ? testList.map((test) =>
                                     <div className={normalStyle}>
-                                        <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => handleTestStart(test.id)}>
+                                        <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => {setTitle(test.title); setModalShow(true); setReadyToStart(test.id)}}> 
                                             <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                             <Card.Body>
                                                 <Card.Title className='card-title'>{test.title}</Card.Title>
@@ -358,15 +389,25 @@ export function Home() {
 
                                                 </Card.Text>
                                             </Card.Body>
+                                            
                                         </Card>
-
+                                         
+                                        
+                                        <MyVerticallyCenteredModal
+                                            show={modalShow}
+                                            onHide={() => setModalShow(false)}
+                                            testName={title}
+                                            onTestStart={() => handleTestStart(readyToStart)}
+                                        />
                                     </div>
+                                    
 
                                 ) : <h4>{"Ничего не нашлось :("}</h4>}
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         )
     }

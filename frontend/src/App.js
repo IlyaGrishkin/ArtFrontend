@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import AppCard from './components/Card/Card';
 import AppNavbar from './components/Navbar/Navbar';
-import MainScreen from './components/MainScreen/MainScreen';
+ 
 
 import TestNavbar from './components/TestNavbar/TestNavbar';
 import { TestResults } from './components/TestResults/TestResults';
@@ -17,16 +17,18 @@ import { handleToken } from './tools/lookups';
 import { Logout } from './components/Logout/Logout';
 import { SignUp } from './components/SignUp/SignUp';
 import { Profile } from './components/Profile/Profile';
-
-
-
-
-
-
+import { useEffect } from 'react';
+import { HelloScreen } from './components/HelloScreen/HelloScreen';
 
 
 
 const App = () => {
+  if (!localStorage.getItem("device")) {
+    localStorage.setItem("device", window.navigator.userAgent)
+  }
+  useEffect(() => {
+    handleToken()
+  }, [])
   setInterval(() => handleToken(), 1000)
   return (
     <div className='app-wrapper'>
@@ -48,7 +50,8 @@ const App = () => {
           <Route path="/signup/confirm/" element={<ConfirmForm />} />
 
           <Route path='/profile/' element={<Profile/>}/>
-
+          
+          <Route path='/start/' element={<HelloScreen/>}/>
 
 
 

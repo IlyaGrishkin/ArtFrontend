@@ -109,7 +109,7 @@ function LoginForm(props) {
                         <button type="submit" className={formValid ? 'btn btn-success w-100 my-2' : 'btn btn-success disabled w-100 my-2'}>Отправить</button>
                     </form>
                     <div className='create-account'>
-                        <p>Нет аккаунта? <a href="/sing-up/">Зарегистрироваться</a></p>
+                        <p>Нет аккаунта? <a href="/signup/">Зарегистрироваться</a></p>
                     </div>
                 </div>
                 

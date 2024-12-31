@@ -9,10 +9,12 @@ export function SignUp() {
     const [emailError, setEmailError] = useState("email не может быть пустым")
 
     const [firstName, setFirstName] = useState("")
+    const [firstNameError, setFirstNameError] = useState()
 
     const [secondName, setSecondName] = useState("")
+    const [secondNameError, setSecondNameError] = useState("")
 
-    const [formValid, setFormValid] = useState(true)
+    const [formValid, setFormValid] = useState(false)
     const [loading, setLoading] = useState(false)
 
     function handleChange(e) {
@@ -32,13 +34,35 @@ export function SignUp() {
         setEmailDirty(true);
     }
 
-
     function handleNameChange(e) {
-        setFirstName(e.target.value)
+        const newName = e.target.value
+        const cyrillicPattern = /^[A-Za-zА-Яа-яёЁ]+(?:[-'\s][A-Za-zА-Яа-яёЁ]+)*$/
+        if (cyrillicPattern.test(String(newName))) {
+            setFormValid(!secondNameError)
+            setFirstNameError("")
+        }
+        else {
+            setFirstNameError(newName.length == 0 ? "поле 'Имя' не может быть пустым" : "некорректное имя")
+            setFormValid(false)
+        }
+        setFirstName(newName)
+        
+
+        
     }
 
     function handleSecondNameChange(e) {
-        setSecondName(e.target.value)
+        const newName = e.target.value
+        const cyrillicPattern = /^[A-Za-zА-Яа-яёЁ]+(?:[-'\s][A-Za-zА-Яа-яёЁ]+)*$/
+        if (cyrillicPattern.test(String(newName))) {
+            setFormValid(!firstNameError)
+            setSecondNameError("")
+        }
+        else {
+            setSecondNameError(newName.length == 0 ? "поле 'Фамилия' не может быть пустым" : "некорректная фамилия")
+            setFormValid(false)
+        }
+        setSecondName(newName)
     }
 
     async function handleSubmit(event) {
@@ -76,11 +100,16 @@ export function SignUp() {
                         {(emailError && emailDirty) ? <div style={{ color: "red" }}>{emailError}</div> : <></>}
 
                         <label className="mt-4" htmlFor="firstName">Имя</label>
-                        <input className="form-control m-0" value={firstName} onChange={e => handleNameChange(e)}/>
+                        <input className="form-control m-0" value={firstName} onChange={e => handleNameChange(e)} 
+                        placeholder="Ваше имя"/>
+                        {firstNameError ? <div style={{ color: "red" }}>{firstNameError}</div> : <></>}
 
                         <label className="mt-4" htmlFor="firstName">Фамилия</label>
-                        <input className="form-control m-0" value={secondName} onChange={e => handleSecondNameChange(e)}/>
+                        <input className="form-control m-0" value={secondName} onChange={e => handleSecondNameChange(e)}
+                        placeholder="Ваша фамилия"/>
+                        {secondNameError ? <div style={{ color: "red" }}>{secondNameError}</div> : <></>}
                         <button type="submit" className="btn btn-primary mt-4">Создать аккаунт</button>
+                        <p>Уже есть аккаунт? <a href="/login/">Войти</a></p>
                     </form>
                 </div>
             </div>
