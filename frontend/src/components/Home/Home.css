@@ -8,3 +8,7 @@
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
 }
+
+.home-card-wrap:hover {
+    box-shadow:  2px 2px 3px grey;
+}

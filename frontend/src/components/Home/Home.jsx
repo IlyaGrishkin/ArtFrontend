@@ -6,10 +6,22 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Card } from 'react-bootstrap';
 import axios from 'axios';
-import { handleToken } from '../../tools/lookups';
 import { MyVerticallyCenteredModal } from '../Modal/Modal';
 
 export function Home() {
+
+    const [matches, setMatches] = useState(
+        window.matchMedia("(min-width: 992px)").matches
+      )
+    
+    useEffect(() => {
+        window
+        .matchMedia("(min-width: 992px)")
+        .addEventListener('change', e => setMatches( e.matches ));
+      }, []);
+
+
+
     if (!JSON.parse(localStorage.getItem("filterTopic"))) {
         const obj = {}
         for (let key of topics.TOPICS) {
@@ -40,7 +52,7 @@ export function Home() {
 
     const [checkedNumber, setCheckedNumber] = useState(JSON.parse(localStorage.getItem('filterNumber')))
 
-
+    const [onUnfound, setOnUnfound] = useState("")
 
 
     // offcanvas 
@@ -59,6 +71,7 @@ export function Home() {
     const [readyToStart, setReadyToStart] = useState(null)
 
     function filter(test) {
+        setOnUnfound("Ничего не найдено")
         const topic = JSON.parse(localStorage.getItem('filterTopic'))
         const duration = JSON.parse(localStorage.getItem('filterDuration'))
         const number = JSON.parse(localStorage.getItem('filterNumber'))
@@ -214,7 +227,7 @@ export function Home() {
 
     //handleTestStart(test.id)
 
-    if (window.screen.width < BootstrapBreakpoints['lg']) {
+    if (!matches) {
         return (
             <div className="home-wrapper">
                 <div className="container-fluid">
@@ -267,7 +280,7 @@ export function Home() {
                     <div className="row">
 
                         {testList.length > 0 ? testList.map((test) =>
-                            <div className="col-12 col-md-6 d-flex justify-content-center">
+                            <div className="col-12 col-md-6 d-flex justify-content-center home-card-wrap">
                                 <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0, transitionDuration: 0.3}} onClick={() => {setTitle(test.title); setModalShow(true); setReadyToStart(test.id)}}>
                                     <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                     <Card.Body>
@@ -302,7 +315,7 @@ export function Home() {
                                     />
                             </div>
 
-                        ) : <h4>{"Ничего не нашлось :("}</h4>}
+                        ) : <h4>{onUnfound}</h4>}
 
                     </div>
                 </div>
@@ -364,7 +377,7 @@ export function Home() {
                             <div className="row">
                                 {testList.length > 0 ? testList.map((test) =>
                                     <div className={normalStyle}>
-                                        <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => {setTitle(test.title); setModalShow(true); setReadyToStart(test.id)}}> 
+                                        <Card className="card mb-4 home-card-wrap" style={{ maxWidth: '20rem', margin: 0 }} onClick={() => {setTitle(test.title); setModalShow(true); setReadyToStart(test.id)}}> 
                                             <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                             <Card.Body>
                                                 <Card.Title className='card-title'>{test.title}</Card.Title>
@@ -402,7 +415,7 @@ export function Home() {
                                     </div>
                                     
 
-                                ) : <h4>{"Ничего не нашлось :("}</h4>}
+                                ) : <h4>{onUnfound}</h4>}
                             </div>
                         </div>
                     </div>

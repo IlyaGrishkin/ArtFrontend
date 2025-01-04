@@ -18,24 +18,32 @@
   padding-right: 50px;
  
   background-color: #1E1E1E;
-  color: white;
+  color: #FFF5D1;
 
   font-weight: 400;
   font-size: 17px;
 }
 
 .login-button:hover {
-  background-color: grey;
-  color: white;
+  background-color: rgb(87, 87, 87);
+  color: #FFF5D1;
   
 }
 
 .my-navbar-link {
   color: #1E1E1E;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 18px;
 }
 
 .my-navbar-brand {
-  font-weight: 500;
+  font-weight: 600;
+}
+
+#offcanvasNavbar-expand-lg {
+  background-color: #FFF5D1;
+}
+
+.text-beige {
+  color: #FFF5D1;
 }

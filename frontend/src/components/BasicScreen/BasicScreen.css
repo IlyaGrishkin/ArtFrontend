@@ -24,9 +24,7 @@
     user-select: none;
 }
 
-.card:hover{
-     box-shadow: 1px 1px 3px grey;
-}
+
 
 .line {
     margin-left: 5%;

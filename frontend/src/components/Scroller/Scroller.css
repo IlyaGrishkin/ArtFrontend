@@ -1,0 +1,9 @@
+.scroller-wrap {
+    overflow-x: scroll;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scroll-img {
+    user-select: none;
+}

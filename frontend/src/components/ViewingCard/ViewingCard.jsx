@@ -41,9 +41,9 @@ export function ViewingCard() {
         let styles = "outline-primary disabled"
         if (userAnswers.indexOf(variantID) != -1 && correctAnswers.indexOf(variantID) != -1) {
             styles = "success disabled"
-        } 
+        }
         else if (userAnswers.indexOf(variantID) == -1 && correctAnswers.indexOf(variantID) != -1) {
-            styles = "danger disabled"
+            styles = "outline-success disabled"
         }
         else if (userAnswers.indexOf(variantID) != -1 && correctAnswers.indexOf(variantID) == -1) {
             styles = "danger disabled"
@@ -60,36 +60,36 @@ export function ViewingCard() {
             <div className="row">
                 <div className='col'>
                     <h3>Навигация</h3>
-                    <TestNavbar questions_quantity={questionQuantity} completed={[]} viewing={true}/>
+                    <TestNavbar questions_quantity={questionQuantity} completed={[]} viewing={true} />
                 </div>
                 <div className="col-sm-6 col-md-5">
                     <Card className='my-3'  >
 
-    <div>
-        <Card.Img variant="top" src={pictureURL ? "http://127.0.0.1:8000" + pictureURL : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
-        <Card.Body>
-            <Card.Title>{ }</Card.Title>
-            <Card.Text>
-                <h5>{id}. {questionText}</h5>
-            </Card.Text>
-        </Card.Body>
+                        <div>
+                            <Card.Img variant="top" src={pictureURL ? "http://127.0.0.1:8000" + pictureURL : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
+                            <Card.Body>
+                                <Card.Title>{ }</Card.Title>
+                                <Card.Text>
+                                    <h5>{id}. {questionText}</h5>
+                                </Card.Text>
+                            </Card.Body>
 
-        <ListGroup className="list-group-flush">
-            {variants.map((variant) => (
-                <ListGroup.Item>
-                    <Button className="w-100" variant={computeVariant(variant.id)}>
-                        {variant.text}
-                    </Button>
-                </ListGroup.Item>
-            ))}
-        </ListGroup>
+                            <ListGroup className="list-group-flush">
+                                {variants.map((variant) => (
+                                    <ListGroup.Item>
+                                        <Button className="w-100" variant={computeVariant(variant.id)}>
+                                            {variant.text}
+                                        </Button>
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
 
-        <Card.Body style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {id == questionsQuantity ?
-                <Button onClick={() => { localStorage.removeItem("viewingData") }} className="w-50" variant='outline-success' href={`/`}>Завершить просмотр</Button>
-                : <Button className="w-50" variant='outline-success' href={`/viewing/${testID}/${parseInt(id) + 1}/`}>Далее</Button>}
-        </Card.Body>
-    </div>
+                            <Card.Body style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                {id == questionsQuantity ?
+                                    <Button onClick={() => { localStorage.removeItem("viewingData") }} className="w-50" variant='outline-success' href={`/`}>Завершить просмотр</Button>
+                                    : <Button className="w-50" variant='outline-success' href={`/viewing/${testID}/${parseInt(id) + 1}/`}>Далее</Button>}
+                            </Card.Body>
+                        </div>
 
 
                     </Card>
@@ -97,8 +97,8 @@ export function ViewingCard() {
                 <div className="col"></div>
 
             </div>
-            
-            
+
+
 
         </div>
 
