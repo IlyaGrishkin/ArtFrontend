@@ -6,6 +6,7 @@
     display: -webkit-box;
     overflow: hidden!important;
     text-overflow: ellipsis;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
 }
 

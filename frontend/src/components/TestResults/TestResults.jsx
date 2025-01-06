@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
+import { API_URLS } from '../Utils/constants';
 
 
 
@@ -13,7 +14,7 @@ export function TestResults() {
         localStorage.removeItem("answers")
         localStorage.removeItem("testRunning")
 
-        const apiUrl = `http://localhost:8000/api/v1/tests/check/test`;
+        const apiUrl = API_URLS.GET_TEST_RESULT;
         let config = {
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -22,7 +23,7 @@ export function TestResults() {
         }
         axios.post(apiUrl,
             {
-                test_id: testID,
+
             },
             config
         )

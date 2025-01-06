@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios'
-import {URLS} from '../Utils/constants'
+import {API_URLS, URLS} from '../Utils/constants'
 import './Card.css';
 
 
@@ -62,7 +62,7 @@ function AppCard(props) {
         function sendAnswers(){
             const answers = JSON.parse(localStorage.getItem("answers"))
             console.log(answers)
-            const apiUrl = `http://localhost:8000/api/v1/tests/update/attempt`;
+            const apiUrl = API_URLS.UPDATE_TEST;
             let config = {
                 headers: {
                     "Access-Control-Allow-Origin": "*",
@@ -82,6 +82,25 @@ function AppCard(props) {
             console.log(serverData);
             //localStorage.setItem("timeStart", JSON.stringify(parseInt((new Date(serverData.data.created_at).getTime() / 1000).toFixed(0))))
             localStorage.setItem("answers",  JSON.stringify(serverData.data.user_answers))
+            }) 
+        }
+
+        function finishTest() {
+            const apiUrl = API_URLS.FINISH_TEST;
+            let config = {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+                }
+            }
+            axios.post(apiUrl, 
+                {
+                },
+                config
+            )
+            
+            .then((resp) => {
+            console.log(resp.data);
             }) 
         }
 
@@ -116,7 +135,7 @@ function AppCard(props) {
                                 questionsQuantity == id ? 
                                 <>
                                  <Button onClick={() => {addAnswer(id, active); sendAnswers()}} className="w-50" variant='outline-success' >Сохранить</Button>
-                                 <Button onClick={() => {addAnswer(id, active); sendAnswers(); window.location.href = `http://localhost:3000/${testID}/results/`}} className="w-50" variant='outline-success' >Завершить тест</Button> 
+                                 <Button onClick={() => {addAnswer(id, active); sendAnswers(); finishTest(); window.location.href = `http://localhost:3000/${testID}/results/`}} className="w-50" variant='outline-success' >Завершить тест</Button> 
                                 </>
                                 :
                                 <Button onClick={() => {addAnswer(id, active); sendAnswers(); window.location.href = `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/`}} className="w-50" variant='outline-success' >Далее</Button>
