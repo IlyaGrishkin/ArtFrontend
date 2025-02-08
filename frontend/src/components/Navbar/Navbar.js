@@ -4,6 +4,8 @@ import './Navbar.css'
 import { Avatar } from '@mui/material';
 import axios from 'axios';
 import { BootstrapBreakpoints } from '../Utils/constants';
+import { sendRequest } from '../../tools/lookups';
+import { AnimatedLink } from '../AnimatedLink/AnimatedLink';
 
 
 
@@ -46,7 +48,8 @@ function AppNavbar() {
         .catch(e => {
           console.log(e)
         })
-
+      
+      
     }
 
   }, [])
@@ -58,6 +61,7 @@ function AppNavbar() {
 
   const loginButtonSmallScreenStyles = 'mx-2 my-navbar-link d-flex justify-content-center border rounded-3 mb-3 bg-black text-beige'
 
+  
 
   return (
     <>
@@ -79,10 +83,10 @@ function AppNavbar() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/" className={`${matches ? bigScreenStyles : smallScreenStyles}`}>Главная</Nav.Link>
-                  <Nav.Link href="/" className={`${matches ? bigScreenStyles : smallScreenStyles}`}>Тесты</Nav.Link>
-                  <Nav.Link href="/guide-cards/" className={`${matches ? bigScreenStyles : smallScreenStyles}`}>Гайд-карточки</Nav.Link>
-                  <Nav.Link href="/about/" className={`${matches ? bigScreenStyles : smallScreenStyles}`}>О проекте</Nav.Link>
+                  <AnimatedLink href="/" text={"Главная"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
+                  <AnimatedLink href="/" text={"Тесты"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
+                  <AnimatedLink href="/guide-cards/" text={"Гайд-карточки"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
+                  <AnimatedLink href="/about/" text={"О проекте"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
                   {avatar ? <a href='/profile/' className={`${matches ? "" : profileSmallScreenStyles}`}><Avatar src={avatar}/></a> :
                     <Nav.Link href="/login/" className={`${matches ? 'login-button rounded-pill' : loginButtonSmallScreenStyles} `}><p className={`${matches ? 'mx-3' : 'mx-0'} my-0`}>Войти</p></Nav.Link>
                     }

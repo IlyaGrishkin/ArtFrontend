@@ -23,9 +23,6 @@ import { HelloScreen } from './components/HelloScreen/HelloScreen';
 
 
 const App = () => {
-  if (!localStorage.getItem("device")) {
-    localStorage.setItem("device", window.navigator.userAgent)
-  }
   useEffect(() => {
     handleToken()
   }, [])
@@ -47,7 +44,7 @@ const App = () => {
           <Route path="/logout/" element={<Logout />} />
 
           <Route path="/signup/" element={<SignUp />} />
-          <Route path="/signup/confirm/" element={<ConfirmForm />} />
+          <Route path="/signup/confirm/" element={<ConfirmForm apiUrl="http://localhost:8000/api/v1/customers/create/confirm"/>} />
 
           <Route path='/profile/' element={<Profile/>}/>
           

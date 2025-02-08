@@ -69,8 +69,7 @@ export function SignUp() {
         if (formValid) {
             setLoading(true)
             event.preventDefault()
-            localStorage.setItem("userEmail", JSON.stringify(email))
-            const apiUrl = `http://localhost:8000/api/v1/customers/create_and_auth`;
+            const apiUrl = `http://localhost:8000/api/v1/customers/create/send_code`;
             await axios.post(apiUrl, 
                 {
                     email: email,
@@ -82,6 +81,10 @@ export function SignUp() {
             .then((resp) => {
             const serverData = resp.data;
             console.log(serverData)
+            
+            localStorage.setItem("userEmail", JSON.stringify(email))
+            localStorage.setItem("userFirstName", JSON.stringify(firstName))
+            localStorage.setItem("userLastName", JSON.stringify(secondName))
             });
             window.location.href = "http://localhost:3000/signup/confirm/"
             

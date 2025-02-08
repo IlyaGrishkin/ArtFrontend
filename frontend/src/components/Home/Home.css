@@ -13,3 +13,7 @@
 .home-card-wrap:hover {
     box-shadow:  2px 2px 3px grey;
 }
+
+.filter-item {
+    color: gray;
+}

@@ -3,6 +3,7 @@ import { Card, ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios'
 import {API_URLS, URLS} from '../Utils/constants'
 import './Card.css';
+ 
 
 
 
@@ -11,37 +12,51 @@ function AppCard(props) {
     const testID = props.testID
     const variants = props.variants;
     const questionsQuantity = props.questionsQuantity
-    const [answer, setAnswer] = useState({});
+    const [userAnswers, setUserAnswers] = useState({})
+    const [active, setActive] = useState([]);
+
+    function getActualAnswers(){
+        const apiUrl = API_URLS.UPDATE_TEST;
+        console.log('get_actual()', testID)
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+        axios.post(apiUrl, 
+            {
+                test_id: testID,
+                user_answers: {}
+            },
+            config
+        )
+        
+        .then((resp) => {
+        const serverData = resp.data;
+        const ans = serverData.data.user_answers;
+        setUserAnswers(ans)
+        setActive(ans[id] ? ans[id] : [])
+        console.log('getActual', serverData);})
+        .catch(resp => {
+            console.log(resp)
+            if (resp.response.status == 400) {
+                window.location.href = URLS.TEST_RESULT
+            }
+        })
+    }
+    
+    useEffect(() => {getActualAnswers()}, [])
+
     
 
-    if (!localStorage.getItem("answers")) {
-        let answersStorage = {};
-
-        for (let i = 1; i <= questionsQuantity; i++) {
-            answersStorage[i] = []
-        }
-
-        localStorage.setItem('answers', JSON.stringify(answersStorage));
-    }
-
-    const [active, setActive] = useState(JSON.parse(localStorage.getItem("answers"))[id] ? JSON.parse(localStorage.getItem("answers"))[id] : []);
+    
 
     const testRunning = JSON.parse(localStorage.getItem("testRunning"));
 
-    if (!testRunning) {
-        localStorage.setItem("testRunning", JSON.stringify(testID));
-    }
-    else if (!(testRunning == testID)) {
-        return (
-            <div>
-                <h1>Пошёл нахуй</h1>
-            </div>
-        )
-    }
-    else {
+     
     
-        function changeActive(pos) {
-
+        function addAnswer(questionId, pos) {
             let newActive = active.slice();
             if (newActive.indexOf(pos) != -1) {
                 newActive.splice(newActive.indexOf(pos), 1);
@@ -49,18 +64,16 @@ function AppCard(props) {
             else {
                 newActive.push(pos);
             }
-
-            return newActive;
+            let ans = Object.assign({}, userAnswers)
+            ans[questionId] = newActive;
+            setActive(newActive)
+            setUserAnswers(ans)
         }
 
-        function addAnswer(questionId, activeList) {
-            let ans = JSON.parse(localStorage.getItem('answers'));
-            ans[questionId] = activeList;
-            localStorage.setItem('answers', JSON.stringify(ans));
-        }
+       
 
         function sendAnswers(){
-            const answers = JSON.parse(localStorage.getItem("answers"))
+            const answers = userAnswers
             console.log(answers)
             const apiUrl = API_URLS.UPDATE_TEST;
             let config = {
@@ -81,11 +94,20 @@ function AppCard(props) {
             const serverData = resp.data;
             console.log(serverData);
             //localStorage.setItem("timeStart", JSON.stringify(parseInt((new Date(serverData.data.created_at).getTime() / 1000).toFixed(0))))
-            localStorage.setItem("answers",  JSON.stringify(serverData.data.user_answers))
             }) 
+            .catch((resp) => {
+            console.log(resp)
+            if (resp.response.status == 400) {
+                window.location.href = URLS.TEST_RESULT
+            }
+            }
+            )
         }
 
         function finishTest() {
+            localStorage.removeItem("testRunning");
+            localStorage.removeItem("testData")
+            
             const apiUrl = API_URLS.FINISH_TEST;
             let config = {
                 headers: {
@@ -100,6 +122,7 @@ function AppCard(props) {
             )
             
             .then((resp) => {
+            console.log("finishTest")
             console.log(resp.data);
             }) 
         }
@@ -108,7 +131,6 @@ function AppCard(props) {
 
 
         return (
-             
                 <Card className='my-3'>
                     <div>
                         <Card.Img variant="top" src={props.picture ? "http://127.0.0.1:8000" + props.picture : "https://avatars.mds.yandex.net/i?id=dc7cbd3877e56749ab41a0fcc5145434_l-5231880-images-thumbs&n=13"} />
@@ -124,7 +146,7 @@ function AppCard(props) {
                                 <ListGroup.Item>
                                     <Button className="w-100"
                                         variant={(active.indexOf(variant.id) != -1)? "primary" : "outline-primary"}
-                                        onClick={() => { setActive(changeActive(variant.id)) }}>{variant.text}
+                                        onClick={() => {addAnswer(id, variant.id); }}>{variant.text}
                                     </Button>
                                 </ListGroup.Item>
                             ))}
@@ -134,11 +156,11 @@ function AppCard(props) {
                             {
                                 questionsQuantity == id ? 
                                 <>
-                                 <Button onClick={() => {addAnswer(id, active); sendAnswers()}} className="w-50" variant='outline-success' >Сохранить</Button>
-                                 <Button onClick={() => {addAnswer(id, active); sendAnswers(); finishTest(); window.location.href = `http://localhost:3000/${testID}/results/`}} className="w-50" variant='outline-success' >Завершить тест</Button> 
+                                 <Button onClick={() => {sendAnswers()}} className="w-50" variant='outline-success' >Сохранить</Button>
+                                 <Button onClick={() => {sendAnswers(); finishTest(); window.location.href = `http://localhost:3000/${testID}/results/`}} className="w-50" variant='outline-success' >Завершить тест</Button> 
                                 </>
                                 :
-                                <Button onClick={() => {addAnswer(id, active); sendAnswers(); window.location.href = `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/`}} className="w-50" variant='outline-success' >Далее</Button>
+                                <Button onClick={() => {sendAnswers(); window.location.href = `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/`}} className="w-50" variant='outline-success' >Далее</Button>
                             }
                             
                                 
@@ -153,7 +175,9 @@ function AppCard(props) {
 
 
     }
-}
+
+
+//
 
 //href={id == questionsQuantity ? `/${testID}/results/` : `/card/${testID}/${id ? parseInt(id) + 1 : 1}/`} 
 

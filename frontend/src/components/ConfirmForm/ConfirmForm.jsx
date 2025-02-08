@@ -5,7 +5,8 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 
 
-function ConfirmForm() {
+function ConfirmForm(props) {
+    // если передан props.apiUrl - создание юзера
     const [loading, setLoading] = useState(false)
     const useFocus = () => {
         const htmlElRef = useRef(null)
@@ -37,12 +38,19 @@ function ConfirmForm() {
         let s = code.join("");
         const email = JSON.parse(localStorage.getItem('userEmail'))
         console.log(email)
-        const apiUrl = `http://localhost:8000/api/v1/customers/confirm`
+        const apiUrl = props.apiUrl ? props.apiUrl : `http://localhost:8000/api/v1/customers/get/confirm`
+        const defaultData = {
+            email: email,
+            code: s
+        }
+        const createData = {
+            first_name: JSON.parse(localStorage.getItem('userFirstName')),
+            last_name: JSON.parse(localStorage.getItem("userLastName")),
+            email: email,
+            code: s,
+        }
         await axios.post(apiUrl,
-            {
-                email: email,
-                code: s
-            }
+            props.apiUrl ? createData : defaultData
         )
 
             .then((resp) => {

@@ -45,7 +45,7 @@ function LoginForm(props) {
             setLoading(true)
             event.preventDefault()
             localStorage.setItem("userEmail", JSON.stringify(email))
-            const apiUrl = `http://localhost:8000/api/v1/customers/get_and_auth`;
+            const apiUrl = `http://localhost:8000/api/v1/customers/get/send_code`;
             await axios.post(apiUrl, 
                 {
                     email: email

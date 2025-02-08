@@ -4,9 +4,10 @@ import Timer from "../Timer/Timer";
 import AppCard from "../Card/Card";
 import { useEffect, useState } from "react";
 import axios from 'axios'
-import { handleToken } from "../../tools/lookups";
+import { motion } from "motion/react"
 import './TestScreen.css'
-import { Button } from "react-bootstrap";
+import { API_URLS } from "../Utils/constants";
+ 
 
 
 
@@ -38,8 +39,9 @@ function TestScreen(props) {
 
 
     async function fetchData() {
-        const apiUrl = `http://localhost:8000/api/v1/tests/${testID}`;
-        await axios.get(apiUrl).then((resp) => {
+         
+            const apiUrl = `http://localhost:8000/api/v1/tests/${testID}`;
+            await axios.get(apiUrl).then((resp) => {
             const serverData = resp.data;
             console.log(serverData)
             setData(serverData.data);
@@ -47,11 +49,16 @@ function TestScreen(props) {
             setAnswers(serverData.data.items[id - 1].answers)
             setQuestionsQuantity(serverData.data.items.length)
             setPictureURL(serverData.data.items[id - 1].picture)
+            localStorage.setItem("testData", JSON.stringify(serverData))
         })
+        
+        
     }
 
+    
 
-    useEffect(() => {fetchData()}, []) 
+
+    useEffect(() => {fetchData();}, []) 
     
 
 
@@ -62,20 +69,22 @@ function handleTimeout(testId) {
     localStorage.removeItem("testTime")
     localStorage.removeItem("answers")
     localStorage.removeItem("testRunning");
+    localStorage.removeItem("testData")
     window.location.href = `http://localhost:3000/${testId}/results/`
 
 }
 
 
-if (JSON.parse(localStorage.getItem("testRunning")) != testID) {
-    return (
-        <div>
-            <h1>Вы уже проходите другой тест</h1>
-        </div>
-    )
-}
+//if (JSON.parse(localStorage.getItem("testRunning")) != testID) {
+    //return (
+        //<div>
+            //<h1>Вы уже проходите другой тест</h1>
+        //</div>
+   // )
+//}
 
-else {
+//else
+ {
     return (
         <div className='container-fluid'>
             <div className="row d-flex justify-content-center">
@@ -92,9 +101,23 @@ else {
                         </div>
                     </div>
                 </div>
-                <div className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5'>
+                <motion.div 
+                    initial={
+                        {
+                            opacity: 0
+                        }
+                    }
+                    animate={
+                        {
+                            opacity: 1,
+                        }}
+                    transition={{
+                            duration: 0.7,
+                            ease: "linear"
+                        }}
+                className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5'>
                     <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL} />
-                </div>
+                </motion.div>
     
             </div>
     

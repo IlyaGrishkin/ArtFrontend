@@ -7,7 +7,7 @@ import { API_URLS } from '../Utils/constants';
 
 export function TestResults() {
     const { testID } = useParams();
-    const [result, setResult] = useState(JSON.parse(localStorage.getItem("testResult")) ? JSON.parse(localStorage.getItem("testResult")) : "Загрузка...");
+    const [result, setResult] = useState("Загрузка...");
 
 
     useEffect(() => {

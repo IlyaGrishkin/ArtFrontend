@@ -30,7 +30,8 @@ export const BootstrapBreakpoints = {
 
 export const URLS = {
     HOME: "http://localhost:3000",
-    FINISH_TEST: ""
+    FINISH_TEST: "",
+    TEST_RESULT: "http://localhost:3000/0/results/"
 }
 
 export const API_URLS = {
