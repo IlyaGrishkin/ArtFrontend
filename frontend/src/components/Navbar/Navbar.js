@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BootstrapBreakpoints } from '../Utils/constants';
 import { sendRequest } from '../../tools/lookups';
 import { AnimatedLink } from '../AnimatedLink/AnimatedLink';
+import { StyledBadge } from '../StyledBadge/StyledBadge';
 
 
 
@@ -16,6 +17,8 @@ function AppNavbar() {
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 992px)").matches
   )
+
+  const [showBadge, setShowBadge] = useState(false)
 
   useEffect(() => {
     window
@@ -54,6 +57,28 @@ function AppNavbar() {
 
   }, [])
 
+  useEffect(() => {
+    const apiUrl = 'http://localhost:8000/api/v1/tests/test_session/get_test_id'
+    if (JSON.parse(localStorage.getItem("accessToken"))) {
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+        axios.get(apiUrl, config).then((resp) => {
+            const serverData = resp.data;
+            setShowBadge(true)
+            console.log('run', serverData)
+            })
+
+    .catch(resp => {})
+      setShowBadge(false)
+    }
+    
+
+    }, [])
+
   const smallScreenStyles = 'mx-2 my-navbar-link d-flex justify-content-center border rounded-3 mb-3'
   const bigScreenStyles = 'mx-2 my-navbar-link'
 
@@ -87,7 +112,13 @@ function AppNavbar() {
                   <AnimatedLink href="/" text={"Тесты"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
                   <AnimatedLink href="/guide-cards/" text={"Гайд-карточки"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
                   <AnimatedLink href="/about/" text={"О проекте"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
-                  {avatar ? <a href='/profile/' className={`${matches ? "" : profileSmallScreenStyles}`}><Avatar src={avatar}/></a> :
+                  {avatar ? <a href='/profile/' className={`${matches ? "" : profileSmallScreenStyles}`}>
+                  {showBadge ? <StyledBadge overlap="circular"
+                                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                 variant="dot">
+                    <Avatar src={avatar}/></StyledBadge> :
+                    <Avatar src={avatar}/>
+                    } </a> :
                     <Nav.Link href="/login/" className={`${matches ? 'login-button rounded-pill' : loginButtonSmallScreenStyles} `}><p className={`${matches ? 'mx-3' : 'mx-0'} my-0`}>Войти</p></Nav.Link>
                     }
                 </Nav>

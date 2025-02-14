@@ -15,6 +15,8 @@ function AppCard(props) {
     const [userAnswers, setUserAnswers] = useState({})
     const [active, setActive] = useState([]);
 
+    
+
     function getActualAnswers(){
         const apiUrl = API_URLS.UPDATE_TEST;
         console.log('get_actual()', testID)

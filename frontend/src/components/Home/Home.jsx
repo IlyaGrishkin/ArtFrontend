@@ -229,23 +229,7 @@ export function Home() {
         })
     }, [])
 
-    useEffect(() => {
-        const apiUrl = 'http://localhost:8000/api/v1/tests/test_session/get_test_id'
-        if (JSON.parse(localStorage.getItem("accessToken"))) {
-            let config = {
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
-                }
-            }
-            axios.get(apiUrl, config).then((resp) => {
-                const serverData = resp.data;
-                console.log('run', serverData)
-                })
-        }
-        
-
-        }, [])
+    
 
 
     function handleTestStart(testID) {
@@ -278,8 +262,13 @@ export function Home() {
                     }
                     localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
                     localStorage.setItem("testRunning", JSON.stringify(testID))
-                    //window.location.href = `http://localhost:3000/card/${testID}/1/`
+                    window.location.href = `http://localhost:3000/card/${testID}/1/`
 
+                })
+                .catch(resp => {
+                    if (resp.response.status == 400) {
+                        alert('Вы уже проходите другой тест. Завершите его, чтобы начать этот.')
+                    }
                 })
 
         }

@@ -11,6 +11,7 @@ function TestNavbar(props) {
     const questions_quantity = props.questions_quantity;
     const { id } = useParams();
     const completed = props.completed;
+    console.log('completed', completed)
     const { testID } = useParams();
     
     let urlBase = 'card'

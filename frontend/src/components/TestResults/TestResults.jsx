@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
-import { API_URLS } from '../Utils/constants';
+import { API_URLS, URLS } from '../Utils/constants';
 
 
 
@@ -37,6 +37,9 @@ export function TestResults() {
                 localStorage.setItem("testResult", JSON.stringify(serverData.data.total_score))
                 setResult(serverData.data.total_score)
 
+            })
+            .catch(e => {
+                window.location.href = URLS.HOME
             })
 
 

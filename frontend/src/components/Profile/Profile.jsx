@@ -7,6 +7,7 @@ export function Profile() {
     const [email, setEmail] = useState("")
     const [regDate, setRegDate] = useState("")
     const [name, setName] = useState("")
+    const [testList, setTestList] = useState([])
     const [noToken, setNoToken] = useState(false)
 
     useEffect(() => {
@@ -30,6 +31,8 @@ export function Profile() {
                 const date = new Date(serverData.data.user_created_at)
                 setRegDate(`${date.getDate().toString().length == 1 ? '0' + date.getDate().toString() : date.getDate()}.${parseInt(date.getMonth()) + 1}.${date.getFullYear()}`)
                 setName(serverData.data.user_name)
+                setTestList(serverData.data.user_attempts)
+                console.log(serverData.data.user_attempts)
             })
 
             }
@@ -53,6 +56,14 @@ export function Profile() {
                         <h5 className="mb-4">{email}</h5>
                         <h5>{regDate}</h5>
                     </div>
+                </div>
+                <div className="row">
+                {testList.map(test => 
+                <div>
+                    <p>{test.total_score}</p>
+                </div>
+                    
+    )}
                 </div>
             </div>   
         )
