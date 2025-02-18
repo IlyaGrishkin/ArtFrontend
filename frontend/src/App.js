@@ -19,6 +19,7 @@ import { SignUp } from './components/SignUp/SignUp';
 import { Profile } from './components/Profile/Profile';
 import { useEffect } from 'react';
 import { HelloScreen } from './components/HelloScreen/HelloScreen';
+import { GuideCardScreen } from './components/GuideCardScreen/GuideCardScreen';
 
 
 
@@ -49,6 +50,7 @@ const App = () => {
           <Route path='/profile/' element={<Profile/>}/>
           
           <Route path='/start/' element={<HelloScreen/>}/>
+          <Route path='/guide-cards/' element={<GuideCardScreen/>}/>
 
 
 

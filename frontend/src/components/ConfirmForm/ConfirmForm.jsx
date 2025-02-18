@@ -62,9 +62,14 @@ function ConfirmForm(props) {
                 localStorage.setItem('accessToken', JSON.stringify(accessToken))
                 localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
                 localStorage.setItem('expires', JSON.stringify(expires))
-            });
-            window.location.href = "http://localhost:3000/"
-            
+                window.location.href = "http://localhost:3000/"
+            })
+            .catch(e => {
+                console.log(e)
+                setLoading(false)
+                alert('Неверный код')
+                
+            })
     }   
 
     useEffect(() => {

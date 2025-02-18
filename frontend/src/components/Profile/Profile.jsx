@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Table } from "antd";
 
 
 export function Profile() {
@@ -31,8 +32,8 @@ export function Profile() {
                 const date = new Date(serverData.data.user_created_at)
                 setRegDate(`${date.getDate().toString().length == 1 ? '0' + date.getDate().toString() : date.getDate()}.${parseInt(date.getMonth()) + 1}.${date.getFullYear()}`)
                 setName(serverData.data.user_name)
-                setTestList(serverData.data.user_attempts)
-                console.log(serverData.data.user_attempts)
+                setTestList(serverData.data.user_attempts.slice(0, 10))
+                console.log(serverData.data.user_attempts.slice(0, 10))
             })
 
             }
@@ -41,6 +42,53 @@ export function Profile() {
         }
         
     }, [])
+
+    let dataSource = []
+
+    for (let obj of testList) {
+        let newObj = {}
+        newObj.result = <a href={`/test/view/${obj.attempt_id}`}>{`${obj.total_score}/${obj.question_count}`}</a>
+        newObj.test = obj.test_title
+        newObj.timeSpent = obj.time_spent
+        const date = new Date(obj.end_time)   
+        newObj.endTime = `${date.getDate().toString().length == 1 ? '0' + date.getDate().toString() : date.getDate()}.${parseInt(date.getMonth()) + 1}.${date.getFullYear()}`
+        dataSource.push(newObj)
+    }
+
+    //const dataSource = [
+       // {
+         
+         // result: <a href="#">9/10</a>, 
+          //test: 'Первая научная история войны 1812',
+          //timeSpent: '18:12',
+          //endTime: '01.01.2025'
+        //},
+        
+      const columns = [
+        {
+          title: 'Результат',
+          dataIndex: 'result',
+          key: 'result',
+        },
+        {
+          title: 'Тест',
+          dataIndex: 'test',
+          key: 'test',
+        },
+        {
+          title: 'Время прохождения',
+          dataIndex: 'timeSpent',
+          key: 'timeSpent',
+        },
+        {
+            title: 'Дата прохождения',
+            dataIndex: 'endTime',
+            key: 'endTime',
+          },
+      ];
+      
+      
+
     if (noToken) {
         window.location.href = "http://localhost:3000/signup/"
     }
@@ -58,13 +106,9 @@ export function Profile() {
                     </div>
                 </div>
                 <div className="row">
-                {testList.map(test => 
-                <div>
-                    <p>{test.total_score}</p>
+                 
                 </div>
-                    
-    )}
-                </div>
+                <Table dataSource={dataSource} columns={columns} pagination={false}/>
             </div>   
         )
     }

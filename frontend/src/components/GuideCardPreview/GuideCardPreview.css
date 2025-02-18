@@ -1,0 +1,12 @@
+
+.guide-card-preview {
+    border: 1px solid rgb(226, 224, 224);
+}
+.guide-card-preview:hover {
+    border: 2px solid rgb(158, 158, 158);
+    cursor: pointer;
+}
+.guide-card-preview-body {
+    background-color: white;
+    
+}

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios'
 import { motion } from "motion/react"
 import './TestScreen.css'
-import { URLS } from "../Utils/constants";
+import { API_URLS, URLS } from "../Utils/constants";
 
 
 
@@ -25,6 +25,16 @@ function TestScreen(props) {
     const [show, setShow] = useState(false)
     const [timerInfo, setTimerInfo] = useState(false)
 
+    const [userAnswers, setUserAnswers] = useState({})
+    const [active, setActive] = useState([]);
+
+    const userAnswersSetter = (newAns) => {
+        setUserAnswers(newAns)
+    }
+
+    const activeSetter = (newActive) => {
+        setActive(newActive)
+    }
 
     const testDuration = parseInt(JSON.parse(localStorage.getItem("testDuration")))
 
@@ -35,7 +45,7 @@ function TestScreen(props) {
         const apiUrl = `http://localhost:8000/api/v1/tests/${testID}`;
         await axios.get(apiUrl).then((resp) => {
             const serverData = resp.data;
-            console.log(serverData)
+
             setData(serverData.data);
             setQuestion(serverData.data.items[id - 1])
             setAnswers(serverData.data.items[id - 1].answers)
@@ -43,17 +53,49 @@ function TestScreen(props) {
             setPictureURL(serverData.data.items[id - 1].picture)
             localStorage.setItem("testData", JSON.stringify(serverData))
         })
-
-
     }
 
-    useEffect(() => { fetchData(); }, [])
+    async function getActualAnswers() {
+        const apiUrl = API_URLS.UPDATE_TEST;
+
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+        await axios.post(apiUrl,
+            {
+                test_id: testID,
+                user_answers: {}
+            },
+            config
+        )
+
+            .then((resp) => {
+                const serverData = resp.data;
+                const ans = serverData.data.user_answers;
+                setUserAnswers(ans)
+                setActive(ans[id] ? ans[id] : [])
+                console.log('getActual', serverData);
+            })
+            .catch(resp => {
+                console.log(resp)
+                if (resp.response.status == 400) {
+                    window.location.href = URLS.TEST_RESULT
+                }
+            })
+    }
+
+    useEffect(() => { fetchData(); getActualAnswers() }, [])
+
 
     function getCompleted(ans) {
-        let obj = ans
         let res = []
-        for (let key in obj) {
-            if (obj[key].length > 0) {
+
+        for (let key in ans) {
+
+            if (ans[key].length > 0) {
                 res.push(parseInt(key))
             }
         }
@@ -76,7 +118,7 @@ function TestScreen(props) {
                 <div className="row d-flex justify-content-center">
                     <div className='col-5 col-sm-4 col-md px-0 px-sm-4'>
                         <h3>Навигация</h3>
-                        <TestNavbar questions_quantity={questionQuantity} completed={getCompleted(answers)} />
+                        <TestNavbar questions_quantity={questionQuantity} completed={getCompleted(userAnswers)} />
                     </div>
 
                     <div className="col-5 col-sm-4 col-md px-0 px-sm-4 order-md-2">
@@ -102,7 +144,10 @@ function TestScreen(props) {
                             ease: "linear"
                         }}
                         className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5'>
-                        <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity} variants={answers} picture={pictureURL} />
+                        <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity}
+                            variants={answers} picture={pictureURL}
+                            userAnswers={userAnswers} active={active} getActual={getActualAnswers} 
+                            setActive={activeSetter} setAnswers={userAnswersSetter}/>
                     </motion.div>
 
                 </div>

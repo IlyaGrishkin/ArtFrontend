@@ -58,6 +58,7 @@ function LoginForm(props) {
             });
             window.location.href = "http://localhost:3000/login/check/";
             
+            
         }
         event.preventDefault()
     }

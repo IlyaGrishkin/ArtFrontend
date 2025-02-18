@@ -16,11 +16,24 @@ function Timer(props) {
 
     const duration = props.duration;
     const [time, setTime] = useState("...")
+    const [humanTime, setHumanTime] = useState('...')
 
 
     function countdown() {
         let delta = Math.floor((Date.now() / 1000)) - startTime;
-        setTime(Math.max(Math.floor((duration - delta)), 0))
+        const newTime = Math.max(Math.floor((duration - delta)), 0)
+        setTime(newTime)
+        setHumanTime(formatTime(newTime))
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+    
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+    
+        return `${formattedMinutes}:${formattedSeconds}`;
     }
 
 
@@ -37,7 +50,7 @@ function Timer(props) {
  
         <div className='timer my-3' >
             <img src="https://img.icons8.com/forma-light/96/time.png" alt="time"/>
-            <h2 key={"timerTime"}>{time}</h2>
+            <h2 key={"timerTime"}>{humanTime}</h2>
         </div>
         
  

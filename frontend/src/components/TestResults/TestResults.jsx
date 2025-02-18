@@ -8,13 +8,14 @@ import { API_URLS, URLS } from '../Utils/constants';
 export function TestResults() {
     const { testID } = useParams();
     const [result, setResult] = useState("Загрузка...");
+    const [timeSpent, setTimeSpent] = useState('...')
 
 
     useEffect(() => {
         localStorage.removeItem("answers")
         localStorage.removeItem("testRunning")
 
-        const apiUrl = API_URLS.GET_TEST_RESULT;
+        const apiUrl = API_URLS.GET_INFO;
         let config = {
             headers: {
                 "Access-Control-Allow-Origin": "*",
@@ -30,12 +31,12 @@ export function TestResults() {
 
             .then((resp) => {
                 const serverData = resp.data;
-                console.log(serverData)
-                localStorage.setItem("viewUserAnswers", JSON.stringify(serverData.data.user_answers))
-                localStorage.setItem("viewCorrectAnswers", JSON.stringify(serverData.data.correct_answers))
-                localStorage.setItem("viewQuestions", JSON.stringify(serverData.data.question_list))
-                localStorage.setItem("testResult", JSON.stringify(serverData.data.total_score))
-                setResult(serverData.data.total_score)
+                const current = serverData.data.user_attempts[0]
+                console.log(serverData.data.user_attempts)
+                console.log(current)
+                setResult(`${current.total_score}/${current.question_count}`)
+                setTimeSpent(current.time_spent)
+                
 
             })
             .catch(e => {
@@ -51,6 +52,7 @@ export function TestResults() {
     return (
         <div>
             <h1>Ваш результат: {result}</h1>
+            <h2>Время прохождения: {timeSpent}</h2>
             <a href={`/viewing/${testID}/1/`}>Просмотр</a>
         </div>
     )

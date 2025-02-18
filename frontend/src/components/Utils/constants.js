@@ -1,5 +1,21 @@
+import axios from "axios";
+ 
+
+function getTopics() {
+    let res = []
+    const apiUrl = `http://localhost:8000/api/v1/tests/subjects/get`
+    axios.get(apiUrl).then((resp) => {
+        const serverData = resp.data.data.items
+        for (let obj of serverData) {
+            res.push(obj.subject)
+        } 
+        })
+    return res
+}
+
+
 export const topics = {
-    TOPICS: ['Архитектура', 'Живопись', 'Скульптура'],
+    TOPICS: getTopics(),
     LENGTH: 3,
 }
 
@@ -39,6 +55,7 @@ export const API_URLS = {
     GET_TEST_RESULT: "http://localhost:8000/api/v1/tests/attempt/result",
     CREATE_TEST: "http://localhost:8000/api/v1/tests/attempt/create",
     UPDATE_TEST: "http://localhost:8000/api/v1/tests/attempt/update",
+    GET_INFO: "http://localhost:8000/api/v1/customers/get_info"
 }
 
 export function getUserAttempts(testID) {

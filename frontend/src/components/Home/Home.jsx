@@ -358,7 +358,7 @@ export function Home() {
                                     scale: 1.05,
                                     transition: { duration: 0.1 }
                                 }}
-                                className="col-12 col-md-6 d-flex justify-content-center home-card-wrap">
+                                className="col-12 col-md-6 d-flex justify-content-center">
                                 <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0, transitionDuration: 0.3 }} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
                                     <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                     <Card.Body>

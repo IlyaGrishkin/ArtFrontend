@@ -31,10 +31,7 @@ export function ViewingCard() {
     }, [])
 
     const questionsQuantity = JSON.parse(localStorage.getItem("viewQuestions")).length
-
-    //window.addEventListener('unload', function() {
-    // localStorage.removeItem("viewUserAnswers")
-    //})
+ 
 
 
     function computeVariant(variantID) {
