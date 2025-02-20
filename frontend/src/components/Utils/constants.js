@@ -44,21 +44,56 @@ export const BootstrapBreakpoints = {
 }
 
 
+export const SERVER_HOST  = "http://127.0.0.1:8000"
+export const CLIENT_HOST = "http://localhost:3000"
+
 export const URLS = {
     HOME: "http://localhost:3000",
     FINISH_TEST: "",
-    TEST_RESULT: "http://localhost:3000/0/results/"
+    TEST_RESULT: "http://localhost:3000/0/results/",
+    LOGIN_CHECK: "http://localhost:3000/login/check/",
+    SIGNUP: "http://localhost:3000/signup/",
+    SIGNUP_CONFIRM: "http://localhost:3000/signup/confirm/"
 }
 
+
+
 export const API_URLS = {
+    GET_ALL_TESTS: `http://localhost:8000/api/v1/tests/`,
+    GET_ALL_CARDS: `http://localhost:8000/api/v1/guide/`,
+
     FINISH_TEST: "http://localhost:8000/api/v1/tests/attempt/end",
     GET_TEST_RESULT: "http://localhost:8000/api/v1/tests/attempt/result",
     CREATE_TEST: "http://localhost:8000/api/v1/tests/attempt/create",
     UPDATE_TEST: "http://localhost:8000/api/v1/tests/attempt/update",
-    GET_INFO: "http://localhost:8000/api/v1/customers/get_info"
+
+    GET_INFO: "http://localhost:8000/api/v1/customers/get_info",
+    GET_ATTEMPT_INFO: "http://localhost:8000/api/v1/tests/attempt/info",
+
+    GET_CONFIRM: `http://localhost:8000/api/v1/customers/get/confirm`,
+    CREATE_CONFIRM: "http://localhost:8000/api/v1/customers/create/confirm",
+    GET_SEND_CODE: `http://localhost:8000/api/v1/customers/get/send_code`,
+    CREATE_SEND_CODE: `http://localhost:8000/api/v1/customers/create/send_code`,
+    GET_TEST_SESSION: 'http://localhost:8000/api/v1/tests/test_session/get_test_id',
 }
 
 export function getUserAttempts(testID) {
     return `http://localhost:8000/api/v1/tests/${testID}/attempts/user`
 }
 
+
+export function startTest(testID) {
+    return `http://localhost:3000/card/${testID}/1/`
+}
+
+export function getTestResult() {
+    return `http://localhost:3000/results/`
+}
+
+export function getGuideCard(ID) {
+    return `http://localhost:3000/guide-card/${ID}/`
+}
+
+export function getTest(testID){
+    return `http://localhost:8000/api/v1/tests/${testID}`
+}

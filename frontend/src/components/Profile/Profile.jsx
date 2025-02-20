@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Table } from "antd";
+import { API_URLS, SERVER_HOST, URLS } from "../Utils/constants";
 
 
 export function Profile() {
@@ -13,7 +14,7 @@ export function Profile() {
 
     useEffect(() => {
         if (JSON.parse(localStorage.getItem("accessToken"))) {
-            const apiUrl = `http://localhost:8000/api/v1/customers/get_info`;
+            const apiUrl = API_URLS.GET_INFO;
             let config = {
                 headers: {
                     "Access-Control-Allow-Origin": "*",
@@ -27,13 +28,16 @@ export function Profile() {
             .then(resp => {
                 const serverData = resp.data;
                 console.log(serverData)
-                setAvatar("http://localhost:8000" + serverData.data.avatar_path)
+                setAvatar(SERVER_HOST + serverData.data.avatar_path)
                 setEmail(serverData.data.user_email)
                 const date = new Date(serverData.data.user_created_at)
                 setRegDate(`${date.getDate().toString().length == 1 ? '0' + date.getDate().toString() : date.getDate()}.${parseInt(date.getMonth()) + 1}.${date.getFullYear()}`)
                 setName(serverData.data.user_name)
                 setTestList(serverData.data.user_attempts.slice(0, 10))
                 console.log(serverData.data.user_attempts.slice(0, 10))
+            })
+            .catch(resp => {
+                console.log(resp)
             })
 
             }
@@ -47,7 +51,7 @@ export function Profile() {
 
     for (let obj of testList) {
         let newObj = {}
-        newObj.result = <a href={`/test/view/${obj.attempt_id}`}>{`${obj.total_score}/${obj.question_count}`}</a>
+        newObj.result = <a href={`/viewing/${obj.attempt_id}/1/`}>{`${obj.total_score}/${obj.question_count}`}</a>
         newObj.test = obj.test_title
         newObj.timeSpent = obj.time_spent
         const date = new Date(obj.end_time)   
@@ -55,14 +59,7 @@ export function Profile() {
         dataSource.push(newObj)
     }
 
-    //const dataSource = [
-       // {
-         
-         // result: <a href="#">9/10</a>, 
-          //test: 'Первая научная история войны 1812',
-          //timeSpent: '18:12',
-          //endTime: '01.01.2025'
-        //},
+
         
       const columns = [
         {
@@ -90,7 +87,7 @@ export function Profile() {
       
 
     if (noToken) {
-        window.location.href = "http://localhost:3000/signup/"
+        window.location.href = URLS.SIGNUP
     }
     else {
         return (

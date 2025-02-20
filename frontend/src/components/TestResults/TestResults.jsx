@@ -9,6 +9,7 @@ export function TestResults() {
     const { testID } = useParams();
     const [result, setResult] = useState("Загрузка...");
     const [timeSpent, setTimeSpent] = useState('...')
+    const [attemptID, setAttemptID] = useState(0)
 
 
     useEffect(() => {
@@ -36,6 +37,7 @@ export function TestResults() {
                 console.log(current)
                 setResult(`${current.total_score}/${current.question_count}`)
                 setTimeSpent(current.time_spent)
+                setAttemptID(current.attempt_id)
                 
 
             })
@@ -53,7 +55,7 @@ export function TestResults() {
         <div>
             <h1>Ваш результат: {result}</h1>
             <h2>Время прохождения: {timeSpent}</h2>
-            <a href={`/viewing/${testID}/1/`}>Просмотр</a>
+            <a href={`/viewing/${attemptID}/1/`}>Просмотр</a>
         </div>
     )
 }

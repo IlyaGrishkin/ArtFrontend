@@ -1,6 +1,7 @@
 import { Backdrop, CircularProgress } from "@mui/material"
 import axios from "axios"
 import { useState } from "react"
+import { API_URLS, URLS } from "../Utils/constants"
 
 
 export function SignUp() {
@@ -69,7 +70,7 @@ export function SignUp() {
         if (formValid) {
             setLoading(true)
             event.preventDefault()
-            const apiUrl = `http://localhost:8000/api/v1/customers/create/send_code`;
+            const apiUrl = API_URLS.CREATE_SEND_CODE;
             await axios.post(apiUrl, 
                 {
                     email: email,
@@ -85,8 +86,14 @@ export function SignUp() {
             localStorage.setItem("userEmail", JSON.stringify(email))
             localStorage.setItem("userFirstName", JSON.stringify(firstName))
             localStorage.setItem("userLastName", JSON.stringify(secondName))
-            });
-            window.location.href = "http://localhost:3000/signup/confirm/"
+            window.location.href = URLS.SIGNUP_CONFIRM
+            })
+            .catch(resp => {
+                alert('Неверный код')
+            })
+            
+            
+            
             
         }
         event.preventDefault()

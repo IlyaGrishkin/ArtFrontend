@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios'
-import { API_URLS, URLS } from '../Utils/constants'
+import { API_URLS, getTestResult, SERVER_HOST, URLS } from '../Utils/constants'
 import './Card.css';
 
 
@@ -69,34 +69,12 @@ function AppCard(props) {
             )
     }
 
-    function finishTest() {
-        localStorage.removeItem("testRunning");
-        localStorage.removeItem("testData")
-
-        const apiUrl = API_URLS.FINISH_TEST;
-        let config = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
-            }
-        }
-        axios.post(apiUrl,
-            {
-            },
-            config
-        )
-
-            .then((resp) => {
-                console.log("finishTest")
-                console.log(resp.data);
-            })
-    }
-
+    
 
     return (
         <Card className='my-3 home-card-wrap'>
             <div>
-                <Card.Img variant="top" src={props.picture ? "http://127.0.0.1:8000" + props.picture : "https://avatars.mds.yandex.net/i?id=dc7cbd3877e56749ab41a0fcc5145434_l-5231880-images-thumbs&n=13"} />
+                <Card.Img variant="top" src={props.picture ? SERVER_HOST + props.picture : "https://avatars.mds.yandex.net/i?id=dc7cbd3877e56749ab41a0fcc5145434_l-5231880-images-thumbs&n=13"} />
                 <Card.Body>
                     <Card.Title>{ }</Card.Title>
                     <Card.Text>
@@ -120,10 +98,10 @@ function AppCard(props) {
                         questionsQuantity == id ?
                             <>
                                 <Button onClick={() => { sendAnswers() }} className="w-50" variant='outline-success' >Сохранить</Button>
-                                <Button onClick={() => { sendAnswers(); finishTest(); window.location.href = `http://localhost:3000/${testID}/results/` }} className="w-50" variant='outline-success' >Завершить тест</Button>
+                                <Button onClick={() => { sendAnswers(); props.finishTest(); window.location.href = getTestResult(testID) }} className="w-50" variant='outline-success' >Завершить тест</Button>
                             </>
                             :
-                            <Button onClick={() => { sendAnswers(); window.location.href = `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/` }} className="w-50" variant='outline-success' >Далее</Button>
+                            <Button onClick={() => { sendAnswers();  }} className="w-50" variant='outline-success' >Далее</Button>
                     }
 
 

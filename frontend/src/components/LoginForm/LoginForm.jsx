@@ -4,6 +4,7 @@ import {Carousel} from 'react-bootstrap';
 import './LoginForm.css';
 import axios from 'axios'
 import { Backdrop, CircularProgress } from '@mui/material';
+import { API_URLS, URLS } from '../Utils/constants';
 
 
 
@@ -45,7 +46,7 @@ function LoginForm(props) {
             setLoading(true)
             event.preventDefault()
             localStorage.setItem("userEmail", JSON.stringify(email))
-            const apiUrl = `http://localhost:8000/api/v1/customers/get/send_code`;
+            const apiUrl = API_URLS.GET_SEND_CODE;
             await axios.post(apiUrl, 
                 {
                     email: email
@@ -55,8 +56,12 @@ function LoginForm(props) {
             .then((resp) => {
             const serverData = resp.data;
             console.log(serverData)
-            });
-            window.location.href = "http://localhost:3000/login/check/";
+            window.location.href = URLS.LOGIN_CHECK;
+            })
+            .catch(resp => {
+                console.log(resp)
+            })
+            
             
             
         }

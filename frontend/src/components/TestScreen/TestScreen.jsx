@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios'
 import { motion } from "motion/react"
 import './TestScreen.css'
-import { API_URLS, URLS } from "../Utils/constants";
+import { API_URLS, getTest, getTestResult, URLS } from "../Utils/constants";
 
 
 
@@ -42,7 +42,7 @@ function TestScreen(props) {
 
     async function fetchData() {
 
-        const apiUrl = `http://localhost:8000/api/v1/tests/${testID}`;
+        const apiUrl = getTest(testID);
         await axios.get(apiUrl).then((resp) => {
             const serverData = resp.data;
 
@@ -52,6 +52,9 @@ function TestScreen(props) {
             setQuestionsQuantity(serverData.data.items.length)
             setPictureURL(serverData.data.items[id - 1].picture)
             localStorage.setItem("testData", JSON.stringify(serverData))
+        })
+        .catch(resp => {
+            console.log(resp)
         })
     }
 
@@ -108,9 +111,37 @@ function TestScreen(props) {
         localStorage.removeItem("answers")
         localStorage.removeItem("testRunning");
         localStorage.removeItem("testData")
-        window.location.href = `http://localhost:3000/${testId}/results/`
+        window.location.href =  getTestResult()
 
     }
+
+    function finishTest() {
+        localStorage.removeItem("testRunning");
+        localStorage.removeItem("testData")
+
+        const apiUrl = API_URLS.FINISH_TEST;
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+        axios.post(apiUrl,
+            {
+            },
+            config
+        )
+
+            .then((resp) => {
+                console.log("finishTest")
+                console.log(resp.data);
+            })
+            .catch(resp => {
+                console.log(resp)
+            })
+            
+    }
+
 
     {
         return (
@@ -123,7 +154,7 @@ function TestScreen(props) {
 
                     <div className="col-5 col-sm-4 col-md px-0 px-sm-4 order-md-2">
                         <div className="timer-wrap" onMouseOver={() => setTimerInfo(true)} onMouseOut={() => setTimerInfo(false)}>
-                            <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)} />
+                            <Timer duration={testDuration} onTimeout={() => handleTimeout(testID)} finishTest={finishTest}/>
                             <div className="timer-info" style={{ display: timerInfo ? 'block' : 'none' }}>
                                 <p>По окончании таймера <br /> Ваши ответы отправятся автоматически</p>
                             </div>
@@ -147,7 +178,8 @@ function TestScreen(props) {
                         <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity}
                             variants={answers} picture={pictureURL}
                             userAnswers={userAnswers} active={active} getActual={getActualAnswers} 
-                            setActive={activeSetter} setAnswers={userAnswersSetter}/>
+                            setActive={activeSetter} setAnswers={userAnswersSetter}
+                            finishTest={finishTest}/>
                     </motion.div>
 
                 </div>

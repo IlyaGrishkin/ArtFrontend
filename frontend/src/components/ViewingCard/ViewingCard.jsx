@@ -3,14 +3,15 @@ import { Card, ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import TestNavbar from "../TestNavbar/TestNavbar";
+import { API_URLS, SERVER_HOST } from '../Utils/constants';
+import axios from 'axios';
 
 
 
 
 export function ViewingCard() {
     const { id } = useParams();
-    const { testID } = useParams();
-
+    const { attemptID } = useParams();
 
     const [userAnswers, setUserAnswers] = useState([])
     const [variants, setVariants] = useState([])
@@ -19,19 +20,41 @@ export function ViewingCard() {
     const [correctAnswers, setCorrectAnswers] = useState({})
     const [questionQuantity, setQuestionQuantity] = useState(0)
 
-
     useEffect(() => {
-        setVariants(JSON.parse(localStorage.getItem("viewQuestions"))[id - 1].answers)
-        setQuestionText(JSON.parse(localStorage.getItem("viewQuestions"))[id - 1].title)
-        setQuestionQuantity(JSON.parse(localStorage.getItem("viewQuestions")).length)
-        setUserAnswers(JSON.parse(localStorage.getItem("viewUserAnswers"))[id] ?
-            JSON.parse(localStorage.getItem("viewUserAnswers"))[id] : [])
-        setPictureURL(JSON.parse(localStorage.getItem("viewQuestions"))[id - 1].picture)
-        setCorrectAnswers(JSON.parse(localStorage.getItem("viewCorrectAnswers"))[id])
-    }, [])
+        const apiUrl = API_URLS.GET_ATTEMPT_INFO;
+        let config = {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+            }
+        }
+        axios.post(apiUrl,
+            {
+                attempt_id: attemptID
+            },
+            config
+        )
 
-    const questionsQuantity = JSON.parse(localStorage.getItem("viewQuestions")).length
- 
+            .then((resp) => {
+                const serverData = resp.data;
+                console.log(serverData)
+                setQuestionQuantity(serverData.data.question_list.length)
+
+                const currentQuestion = serverData.data.question_list[parseInt(id) - 1]
+                setQuestionText(currentQuestion.title)
+                setPictureURL(currentQuestion.picture)
+                setVariants(currentQuestion.answers)
+
+                setCorrectAnswers(serverData.data.correct_answers[id])
+                setUserAnswers(serverData.data.user_answers[id])
+                console.log(serverData.data.user_answers)
+
+            })
+            .catch(resp => {
+                console.log(resp)
+            })
+
+    })
 
 
     function computeVariant(variantID) {
@@ -63,7 +86,7 @@ export function ViewingCard() {
                     <Card className='my-3'  >
 
                         <div>
-                            <Card.Img variant="top" src={pictureURL ? "http://127.0.0.1:8000" + pictureURL : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
+                            <Card.Img variant="top" src={pictureURL ? SERVER_HOST + pictureURL : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                             <Card.Body>
                                 <Card.Title>{ }</Card.Title>
                                 <Card.Text>
@@ -82,9 +105,9 @@ export function ViewingCard() {
                             </ListGroup>
 
                             <Card.Body style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                {id == questionsQuantity ?
+                                {id == questionQuantity ?
                                     <Button onClick={() => { localStorage.removeItem("viewingData") }} className="w-50" variant='outline-success' href={`/`}>Завершить просмотр</Button>
-                                    : <Button className="w-50" variant='outline-success' href={`/viewing/${testID}/${parseInt(id) + 1}/`}>Далее</Button>}
+                                    : <Button className="w-50" variant='outline-success' href={`/viewing/${attemptID}/${parseInt(id) + 1}/`}>Далее</Button>}
                             </Card.Body>
                         </div>
 

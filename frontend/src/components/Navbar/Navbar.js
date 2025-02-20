@@ -3,7 +3,7 @@ import { Navbar, Container, Nav, NavDropdown, Offcanvas } from 'react-bootstrap'
 import './Navbar.css'
 import { Avatar } from '@mui/material';
 import axios from 'axios';
-import { BootstrapBreakpoints } from '../Utils/constants';
+import { API_URLS, BootstrapBreakpoints, SERVER_HOST } from '../Utils/constants';
 import { sendRequest } from '../../tools/lookups';
 import { AnimatedLink } from '../AnimatedLink/AnimatedLink';
 import { StyledBadge } from '../StyledBadge/StyledBadge';
@@ -27,7 +27,7 @@ function AppNavbar() {
   }, []);
 
   useEffect(() => {
-    const profileInfo = `http://localhost:8000/api/v1/customers/get_info`
+    const profileInfo = API_URLS.GET_INFO
     if (JSON.parse(localStorage.getItem("accessToken"))) {
 
       let config = {
@@ -45,8 +45,8 @@ function AppNavbar() {
         .then(resp => {
           const serverData = resp.data;
           console.log(serverData)
-          localStorage.setItem("avatar", JSON.stringify("http://localhost:8000" + serverData.data.avatar_path))
-          setAvatar("http://localhost:8000" + serverData.data.avatar_path)
+          localStorage.setItem("avatar", JSON.stringify(SERVER_HOST + serverData.data.avatar_path))
+          setAvatar(SERVER_HOST + serverData.data.avatar_path)
         })
         .catch(e => {
           console.log(e)
@@ -58,7 +58,7 @@ function AppNavbar() {
   }, [])
 
   useEffect(() => {
-    const apiUrl = 'http://localhost:8000/api/v1/tests/test_session/get_test_id'
+    const apiUrl = API_URLS.GET_TEST_SESSION
     if (JSON.parse(localStorage.getItem("accessToken"))) {
         let config = {
             headers: {

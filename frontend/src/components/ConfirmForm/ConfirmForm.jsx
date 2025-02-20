@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import './ConfirmForm.css';
 import axios from 'axios'
 import { Backdrop, CircularProgress } from '@mui/material';
+import { API_URLS, CLIENT_HOST } from '../Utils/constants';
 
 
 
@@ -38,7 +39,7 @@ function ConfirmForm(props) {
         let s = code.join("");
         const email = JSON.parse(localStorage.getItem('userEmail'))
         console.log(email)
-        const apiUrl = props.apiUrl ? props.apiUrl : `http://localhost:8000/api/v1/customers/get/confirm`
+        const apiUrl = props.apiUrl ? props.apiUrl : API_URLS.GET_CONFIRM
         const defaultData = {
             email: email,
             code: s
@@ -62,11 +63,18 @@ function ConfirmForm(props) {
                 localStorage.setItem('accessToken', JSON.stringify(accessToken))
                 localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
                 localStorage.setItem('expires', JSON.stringify(expires))
-                window.location.href = "http://localhost:3000/"
+                window.location.href = CLIENT_HOST
             })
             .catch(e => {
                 console.log(e)
                 setLoading(false)
+                setCode([-1, -1, -1, -1, -1, -1])
+                setNum1("")
+                setNum2("")
+                setNum3("")
+                setNum4("")
+                setNum5("")
+                setNum6("")
                 alert('Неверный код')
                 
             })

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Card, ListGroup, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 import './Timer.css';
 
 
@@ -39,6 +37,7 @@ function Timer(props) {
 
     useEffect(() => {
         if (time <= 0) {
+            props.finishTest()
             props.onTimeout()
         }
         setTimeout(countdown, 1000)

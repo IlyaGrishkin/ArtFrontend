@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Home.css'
 import { Checkbox } from 'antd'
-import { API_URLS, BootstrapBreakpoints, questionsNumber, questionsNumberStrToNum, testDurations, testDurationsStrToNums, topics } from '../Utils/constants'
+import { API_URLS, BootstrapBreakpoints, questionsNumber, questionsNumberStrToNum, startTest, testDurations, testDurationsStrToNums, topics } from '../Utils/constants'
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Card } from 'react-bootstrap';
@@ -207,7 +207,7 @@ export function Home() {
 
 
 
-    const apiUrl = `http://localhost:8000/api/v1/tests/`
+    const apiUrl = API_URLS.GET_ALL_TESTS
 
 
     useEffect(() => {
@@ -226,6 +226,9 @@ export function Home() {
             }
             setTestList(testList)
             setAllTests(serverData.data.items)
+        })
+        .catch(resp => {
+            console.log(resp)
         })
     }, [])
 
@@ -262,7 +265,7 @@ export function Home() {
                     }
                     localStorage.setItem("testDuration", JSON.stringify(test.work_time * 60))
                     localStorage.setItem("testRunning", JSON.stringify(testID))
-                    window.location.href = `http://localhost:3000/card/${testID}/1/`
+                    window.location.href = startTest(testID)
 
                 })
                 .catch(resp => {
