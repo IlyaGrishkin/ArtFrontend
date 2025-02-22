@@ -26,7 +26,7 @@ const App = () => {
   useEffect(() => {
     handleToken()
   }, [])
-  setInterval(() => handleToken(), 1000)
+  setInterval(() => handleToken(), 100000)
   return (
     <div className='app-wrapper'>
       <BrowserRouter>

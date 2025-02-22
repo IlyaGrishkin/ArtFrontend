@@ -8,6 +8,7 @@ import { Card } from 'react-bootstrap';
 import axios from 'axios';
 import { MyVerticallyCenteredModal, NotificationModal } from '../Modal/Modal';
 import { motion } from "motion/react"
+import BasicPagination from '../MuiPagination/MuiPagination';
 
 export function Home() {
     if (!JSON.parse(localStorage.getItem("filterActive"))) {
@@ -73,12 +74,22 @@ export function Home() {
 
     const [allTests, setAllTests] = useState([])
     const [testList, setTestList] = useState([])
+    const [shownTestList, setShownTestList] = useState([])
 
     const [modalShow, setModalShow] = useState(false)
     const [notificationShow, setNotificationShow] = useState(false)
 
     const [title, setTitle] = useState("")
     const [readyToStart, setReadyToStart] = useState(null)
+
+    //pagination
+    const MAX_CARDS = 3
+    const [page, setPage] = useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+        const newTestList = testList.slice((MAX_CARDS * value) - MAX_CARDS, MAX_CARDS * value)
+        setShownTestList(newTestList)
+    };
 
     function filterSwitcher() {
         let all = [];
@@ -162,6 +173,9 @@ export function Home() {
         }
         setCheckedTopic(newChecked)
         setTestList(newTestList)
+        const newShownTestList = newTestList.slice(0, MAX_CARDS )
+        setShownTestList(newShownTestList)
+        setPage(1)
     }
 
     function handleChangeDuration(t) {
@@ -187,6 +201,9 @@ export function Home() {
         }
         setCheckedDuration(newChecked)
         setTestList(newTestList)
+        const newShownTestList = newTestList.slice(0, MAX_CARDS)
+        setShownTestList(newShownTestList)
+        setPage(1)
 
     }
 
@@ -203,6 +220,9 @@ export function Home() {
         }
         setCheckedNumber(newChecked)
         setTestList(newTestList)
+        const newShownTestList = newTestList.slice(0, MAX_CARDS)
+        setShownTestList(newShownTestList)
+        setPage(1)
     }
 
 
@@ -225,6 +245,7 @@ export function Home() {
                 }
             }
             setTestList(testList)
+            setShownTestList(testList.slice(0, MAX_CARDS))
             setAllTests(serverData.data.items)
         })
         .catch(resp => {
@@ -286,7 +307,7 @@ export function Home() {
 
     const noneStyle = 'd-none'
 
-    const normalStyle = "col-lg-6 col-xl-4 d-flex justify-content-center"
+    const normalStyle = "col-lg-6 col-xl-4 d-flex justify-content-center my-3"
 
     //handleTestStart(test.id)
 
@@ -342,66 +363,64 @@ export function Home() {
                     </div>
                     <div className="row">
 
-                        {testList.length > 0 ? testList.map((test) =>
-                            <motion.div
-                                initial={
-                                    {
-                                        scale: 0.1
-                                    }
-                                }
-                                animate={
-                                    {
+                    {shownTestList.length > 0 ? shownTestList.map((test) =>
+                                    <motion.div className={normalStyle}
+                                        initial={
+                                            {
+                                                y: 100,
+                                                opacity: 0
+                                            }
+                                        }
+                                        animate={
+                                            {
+                                                y: 0,
+                                                opacity: 1,
+                                                transition: {duration: 0.5}
+                                            }}
+                                        whileHover={{
+                                            y: -3,
+                                            transition: { duration: 0.1 }
+                                        }}
+                                    >
+                                        <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '22rem', margin: 0, height: 480 + 'px'}} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
+                                            <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
+                                            <Card.Body>
+                                                <Card.Title className='card-title'>{test.title}</Card.Title>
+                                                <Card.Text>
+                                                    {test.description}
+                                                </Card.Text>
+                                                <Card.Text>
+                                                    <div className='timeInfo'>
+                                                        <p>Время: {test.work_time} мин</p>
+                                                         
+                                                    </div>
 
-                                        scale: 1,
-                                        transition: { duration: 1 },
-
-
-                                    }}
-                                whileHover={{
-                                    scale: 1.05,
-                                    transition: { duration: 0.1 }
-                                }}
-                                className="col-12 col-md-6 d-flex justify-content-center">
-                                <Card className="card mb-4" style={{ maxWidth: '20rem', margin: 0, transitionDuration: 0.3 }} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
-                                    <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
-                                    <Card.Body>
-                                        <Card.Title className='card-title'>{test.title}</Card.Title>
-                                        <Card.Text>
-                                            <p className='card-text'>{test.description}</p>
-                                        </Card.Text>
-                                        <Card.Text>
-                                            <div className='timeInfo'>
-                                                <p>Время: {test.work_time} мин</p>
-                                                <video autoPlay muted loop className='timeVideo'>
-                                                    <source src="http://127.0.0.1:8080/wired-gradient-45-clock-time-hover-pinch.mp4" type="video/mp4" />
-                                                </video>
-                                            </div>
-
-                                            <div className='questionsInfo'>
-                                                <p>Количество вопросов: {test.question_count}</p>
-                                                <video autoPlay muted loop className='timeVideo'>
-                                                    <source src="http://127.0.0.1:8080/wired-outline-35-edit-hover-circle.mp4" type="video/mp4" />
-                                                </video>
-                                            </div>
+                                                    <div className='questionsInfo'>
+                                                        <p>Количество вопросов: {test.question_count}</p>
+                                                        
+                                                    </div>
 
 
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                                <MyVerticallyCenteredModal
-                                    show={modalShow}
-                                    onHide={() => setModalShow(false)}
-                                    testName={title}
-                                    onTestStart={() => handleTestStart(readyToStart)}
-                                />
-                                <NotificationModal
-                                show={notificationShow}
-                                />
-                            </motion.div>
+                                                </Card.Text>
+                                            </Card.Body>
 
-                        ) : <h4>{onUnfound}</h4>}
+                                        </Card>
+
+
+                                        <MyVerticallyCenteredModal
+                                            show={modalShow}
+                                            onHide={() => setModalShow(false)}
+                                            testName={title}
+                                            onTestStart={() => handleTestStart(readyToStart)}
+                                        />
+                                    </motion.div>
+
+                                ) : <h4>{onUnfound}</h4>}
 
                     </div>
+                </div>
+                <div className='my-5 d-flex justify-content-center'>
+                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange}/>
                 </div>
 
 
@@ -422,7 +441,7 @@ export function Home() {
     else {
         return (
             <div className="home-wrapper-large">
-                <div className="container-fluid">
+                <div className="container-fluid h-75">
                     <div className="row mb-4">
                         <div className="col-12 d-flex justify-content-center">
                             <h1>Тесты</h1>
@@ -456,11 +475,10 @@ export function Home() {
                         </div>
                         <div className="col-8">
                             <div className="row">
-                                {testList.length > 0 ? testList.map((test) =>
+                                {shownTestList.length > 0 ? shownTestList.map((test) =>
                                     <motion.div className={normalStyle}
                                         initial={
                                             {
-                                                scale: 1,
                                                 y: 100,
                                                 opacity: 0
                                             }
@@ -468,19 +486,15 @@ export function Home() {
                                         animate={
                                             {
                                                 y: 0,
-                                                opacity: 1
-
+                                                opacity: 1,
+                                                transition: {duration: 0.5}
                                             }}
-                                        transition={{
-                                            duration: 1,
-                                            ease: "linear"
-                                        }}
                                         whileHover={{
-                                            scale: 1.05,
+                                            y: -3,
                                             transition: { duration: 0.1 }
                                         }}
                                     >
-                                        <Card className="card mb-4 home-card-wrap" style={{ cursor: "pointer", maxWidth: '20rem', margin: 0 }} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
+                                        <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '24rem', margin: 0, height: 480 + 'px'}} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
                                             <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                             <Card.Body>
                                                 <Card.Title className='card-title'>{test.title}</Card.Title>
@@ -490,16 +504,12 @@ export function Home() {
                                                 <Card.Text>
                                                     <div className='timeInfo'>
                                                         <p>Время: {test.work_time} мин</p>
-                                                        <video autoPlay muted loop className='timeVideo'>
-                                                            <source src="http://127.0.0.1:8080/wired-gradient-45-clock-time-hover-pinch.mp4" type="video/mp4" />
-                                                        </video>
+                                                         
                                                     </div>
 
                                                     <div className='questionsInfo'>
                                                         <p>Количество вопросов: {test.question_count}</p>
-                                                        <video autoPlay muted loop className='timeVideo'>
-                                                            <source src="http://127.0.0.1:8080/wired-outline-35-edit-hover-circle.mp4" type="video/mp4" />
-                                                        </video>
+                                                        
                                                     </div>
 
 
@@ -517,16 +527,15 @@ export function Home() {
                                         />
                                     </motion.div>
 
-
-
-
-
                                 ) : <h4>{onUnfound}</h4>}
                             </div>
+                        
                         </div>
                     </div>
                 </div>
-
+                <div className='my-5 d-flex justify-content-center'>
+                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange}/>
+                </div>
             </div>
         )
     }

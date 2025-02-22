@@ -15,7 +15,7 @@ function ConfirmForm(props) {
 
         return [htmlElRef, setFocus]
     }
-
+    const [inputRef1, setInputFocus1] = useFocus()
     const [inputRef2, setInputFocus2] = useFocus()
     const [inputRef3, setInputFocus3] = useFocus()
     const [inputRef4, setInputFocus4] = useFocus()
@@ -75,8 +75,10 @@ function ConfirmForm(props) {
                 setNum4("")
                 setNum5("")
                 setNum6("")
+                setInputFocus1()
                 alert('Неверный код')
-                
+
+
             })
     }   
 
@@ -234,7 +236,7 @@ function ConfirmForm(props) {
                 <p>Мы отправили письмо c кодом подтверждения на адрес {userEmail}</p>
             </div>
             <div className='code-wrapper'>
-                <input type="text" class="form-control num-item" value={num1} onChange={e => handleChange(e, '1')} onKeyDown={e => handleKey(e, '1')} pattern="\d+" />
+                <input ref={inputRef1} type="text" class="form-control num-item" value={num1} onChange={e => handleChange(e, '1')} onKeyDown={e => handleKey(e, '1')} pattern="\d+" />
                 <input ref={inputRef2} type="text" class="form-control num-item" value={num2} onChange={e => handleChange(e, '2')} onKeyDown={e => handleKey(e, '2')} pattern="\d+" />
                 <input ref={inputRef3} type="text" class="form-control num-item" value={num3} onChange={e => handleChange(e, '3')} onKeyDown={e => handleKey(e, '3')} pattern="\d+" />
                 <input ref={inputRef4} type="text" class="form-control num-item" value={num4} onChange={e => handleChange(e, '4')} onKeyDown={e => handleKey(e, '4')} pattern="\d+" />

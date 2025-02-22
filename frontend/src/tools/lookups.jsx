@@ -18,7 +18,10 @@ async function getData() {
             localStorage.setItem('accessToken', JSON.stringify(accessToken))
             localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
             localStorage.setItem('expires', JSON.stringify(expires))
-        });
+        })
+        .catch(resp => {
+            console.log(resp)
+        })
 }
 
 
