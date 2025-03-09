@@ -106,6 +106,8 @@ export function Profile() {
                  
                 </div>
                 <Table dataSource={dataSource} columns={columns} pagination={false}/>
+
+                <a className="btn btn-danger" href="/logout/">Выйти</a>
             </div>   
         )
     }

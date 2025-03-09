@@ -90,6 +90,10 @@ export function getTestResult() {
     return `http://localhost:3000/results/`
 }
 
+export function getGuideCardData(ID) {
+    return `http://localhost:8000/api/v1/guide/${ID}`
+}
+
 export function getGuideCard(ID) {
     return `http://localhost:3000/guide-card/${ID}/`
 }

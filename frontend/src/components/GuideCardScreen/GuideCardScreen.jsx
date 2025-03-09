@@ -24,6 +24,7 @@ export function GuideCardScreen(){
                     <GuideCardPreview image={SERVER_HOST + item.picture}
                     title={item.title}
                     text={item.text}
+                    id={item.id}
                     />
                 </div>
 

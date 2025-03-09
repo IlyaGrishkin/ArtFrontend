@@ -19,6 +19,7 @@ import { useEffect } from 'react';
 import { HelloScreen } from './components/HelloScreen/HelloScreen';
 import { GuideCardScreen } from './components/GuideCardScreen/GuideCardScreen';
 import { API_URLS } from './components/Utils/constants';
+import { GuideCard } from './components/GuideCard/GuideCard';
 
 
 
@@ -50,6 +51,7 @@ const App = () => {
           
           <Route path='/start/' element={<HelloScreen/>}/>
           <Route path='/guide-cards/' element={<GuideCardScreen/>}/>
+          <Route path='/guide-card/:id/' element={<GuideCard/>}/> 
 
 
 

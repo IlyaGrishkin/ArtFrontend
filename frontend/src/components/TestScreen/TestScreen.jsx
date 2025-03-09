@@ -174,8 +174,8 @@ function TestScreen(props) {
                             duration: 0.7,
                             ease: "linear"
                         }}
-                        className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5'>
-                        <AppCard width={100} id={id} testID={testID} question={question} questionsQuantity={questionQuantity}
+                        className='col-12 col-sm-8 order-md-1 col-md-6 col-lg-5 d-flex justify-content-center'>
+                        <AppCard width={90} id={id} testID={testID} question={question} questionsQuantity={questionQuantity}
                             variants={answers} picture={pictureURL}
                             userAnswers={userAnswers} active={active} getActual={getActualAnswers} 
                             setActive={activeSetter} setAnswers={userAnswersSetter}

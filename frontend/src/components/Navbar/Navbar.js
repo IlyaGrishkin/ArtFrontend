@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Navbar, Container, Nav, NavDropdown, Offcanvas } from 'react-bootstrap';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Navbar, Container, Nav, Offcanvas } from 'react-bootstrap';
 import './Navbar.css'
 import { Avatar } from '@mui/material';
 import axios from 'axios';
-import { API_URLS, BootstrapBreakpoints, SERVER_HOST } from '../Utils/constants';
-import { sendRequest } from '../../tools/lookups';
+import { API_URLS, SERVER_HOST } from '../Utils/constants';
 import { AnimatedLink } from '../AnimatedLink/AnimatedLink';
 import { StyledBadge } from '../StyledBadge/StyledBadge';
 
@@ -12,7 +11,7 @@ import { StyledBadge } from '../StyledBadge/StyledBadge';
 
 function AppNavbar() {
 
-  const [avatar, setAvatar] = useState("")
+  const [avatar, setAvatar] = useState(JSON.parse(localStorage.getItem('avatar')) ? JSON.parse(localStorage.getItem('avatar')) : "")
 
   const [matches, setMatches] = useState(
     window.matchMedia("(min-width: 992px)").matches
@@ -47,6 +46,8 @@ function AppNavbar() {
           console.log(serverData)
           localStorage.setItem("avatar", JSON.stringify(SERVER_HOST + serverData.data.avatar_path))
           setAvatar(SERVER_HOST + serverData.data.avatar_path)
+           
+          
         })
         .catch(e => {
           console.log(e)

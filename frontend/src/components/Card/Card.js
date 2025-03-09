@@ -8,6 +8,16 @@ import './Card.css';
 
 
 function AppCard(props) {
+    const [matches, setMatches] = useState(
+        window.matchMedia("(min-width: 992px)").matches
+    )
+
+    useEffect(() => {
+        window
+            .matchMedia("(min-width: 992px)")
+            .addEventListener('change', e => setMatches(e.matches));
+    }, []);
+
 
     const id = props.id
     const testID = props.testID
@@ -72,7 +82,7 @@ function AppCard(props) {
     
 
     return (
-        <Card className='my-3 home-card-wrap'>
+        <Card style={{width: matches ? '100%' : '90%' }} className='my-3 home-card-wrap'>
             <div>
                 <Card.Img variant="top" src={props.picture ? SERVER_HOST + props.picture : "https://avatars.mds.yandex.net/i?id=dc7cbd3877e56749ab41a0fcc5145434_l-5231880-images-thumbs&n=13"} />
                 <Card.Body>
