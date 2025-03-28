@@ -101,3 +101,7 @@ export function getGuideCard(ID) {
 export function getTest(testID){
     return `http://localhost:8000/api/v1/tests/${testID}`
 }
+
+export function nextQuestion(testID, id) {
+    return `http://localhost:3000/card/${testID}/${parseInt(id) + 1}/`
+}

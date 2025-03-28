@@ -41,9 +41,13 @@
 }
 
 #offcanvasNavbar-expand-lg {
-  background-color: #FFF5D1;
+  background-color: var(--main-color);
 }
 
 .text-beige {
   color: #FFF5D1;
+}
+
+.navbar-login-button {
+
 }

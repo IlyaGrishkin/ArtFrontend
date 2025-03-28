@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios'
-import { API_URLS, getTestResult, SERVER_HOST, URLS } from '../Utils/constants'
+import { API_URLS, getTestResult, nextQuestion, SERVER_HOST, URLS } from '../Utils/constants'
 import './Card.css';
 
 
@@ -111,7 +111,7 @@ function AppCard(props) {
                                 <Button onClick={() => { sendAnswers(); props.finishTest(); window.location.href = getTestResult(testID) }} className="w-50" variant='outline-success' >Завершить тест</Button>
                             </>
                             :
-                            <Button onClick={() => { sendAnswers();  }} className="w-50" variant='outline-success' >Далее</Button>
+                            <Button onClick={() => { sendAnswers();  window.location.href = nextQuestion(testID, id)}} className="w-50" variant='outline-success' >Далее</Button>
                     }
 
 

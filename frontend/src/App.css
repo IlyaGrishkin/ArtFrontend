@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Bokor&family=Great+Vibes&family=Herr+Von+Muellerhoff&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --main-color: #F3EEE8; 
+  --dark-grey: #BDBAB4;
+  --bs-border-color: #BDBAB4;
+  --bs-border-width: 2px;
+}
+
 body {
   height: 100%;
-  background: #FFF5D1;
+  background: #F3EEE8;
+  font-family: "Philosopher";
 }
 
 #root {

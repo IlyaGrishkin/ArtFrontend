@@ -48,7 +48,7 @@ h2 {
     box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.35);
 }
 
-img {
+.login-info img {
     max-width: 105vh;
 }
 
@@ -79,7 +79,7 @@ img {
 }
 
 @media screen and (orientation: portrait) {
-    img {
+    .login-info img {
         max-width: 60vh;
     }
 
@@ -92,7 +92,7 @@ img {
 
 
 @media (min-width: 700px) and (max-width: 1200px) {
-    img {
+    .login-info img {
         max-width: 60vh;
     }
 

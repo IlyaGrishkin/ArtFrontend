@@ -85,7 +85,7 @@ function AppNavbar() {
 
   const profileSmallScreenStyles = 'mx-2 my-navbar-link d-flex justify-content-center'
 
-  const loginButtonSmallScreenStyles = 'mx-2 my-navbar-link d-flex justify-content-center border rounded-3 mb-3 bg-black text-beige'
+  const loginButtonSmallScreenStyles = 'mx-2 my-navbar-link d-flex justify-content-center border rounded-3 mb-3 text-white bg-black'
 
   
 
@@ -113,14 +113,15 @@ function AppNavbar() {
                   <AnimatedLink href="/" text={"Тесты"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
                   <AnimatedLink href="/guide-cards/" text={"Гайд-карточки"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
                   <AnimatedLink href="/about/" text={"О проекте"} styles={`${matches ? bigScreenStyles : smallScreenStyles}`}/>
-                  {avatar ? <a href='/profile/' className={`${matches ? "" : profileSmallScreenStyles}`}>
+                  <span class="border-start ms-3" style={{width: '2px'}}></span>
+                  {avatar ? <a href='/profile/' className={`${matches ? "ms-4" : profileSmallScreenStyles}`}>
                   {showBadge ? <StyledBadge overlap="circular"
                                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                                  variant="dot">
                     <Avatar src={avatar}/></StyledBadge> :
                     <Avatar src={avatar}/>
                     } </a> :
-                    <Nav.Link href="/login/" className={`${matches ? 'login-button rounded-pill' : loginButtonSmallScreenStyles} `}><p className={`${matches ? 'mx-3' : 'mx-0'} my-0`}>Войти</p></Nav.Link>
+                    <AnimatedLink href="/login/" text={"Войти"} styles={`${matches ? bigScreenStyles + ' navbar-login-button ms-4' : loginButtonSmallScreenStyles} `} />
                     }
                 </Nav>
 

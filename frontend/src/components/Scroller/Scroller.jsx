@@ -55,7 +55,8 @@ export const ScrollableList = ({ items }) => {
             style={{
                 display: 'flex',
                 overflowX: 'hidden',
-                cursor: 'grab'
+                height: "350px",
+                cursor: 'grab',
             }}
         >
             {items.map((item, index) => (

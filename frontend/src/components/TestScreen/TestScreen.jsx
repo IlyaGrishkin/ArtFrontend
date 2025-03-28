@@ -14,13 +14,20 @@ import { API_URLS, getTest, getTestResult, URLS } from "../Utils/constants";
 
 
 function TestScreen(props) {
+    
     const { id } = useParams()
     const { testID } = useParams()
     const [data, setData] = useState([])
-    const [question, setQuestion] = useState([])
-    const [answers, setAnswers] = useState([])
-    const [questionQuantity, setQuestionsQuantity] = useState([])
-    const [pictureURL, setPictureURL] = useState("")
+
+    const questionMemo = JSON.parse(localStorage.getItem("serverData"))?.data?.items[id - 1]
+    const answersMemo = JSON.parse(localStorage.getItem("serverData"))?.data?.items[id - 1]?.answers
+    const quantityMemo = JSON.parse(localStorage.getItem("serverData"))?.data?.items?.length
+    const pictureMemo = JSON.parse(localStorage.getItem("serverData"))?.data?.items[id - 1]?.picture
+
+    const [question, setQuestion] = useState(questionMemo ? questionMemo : [])
+    const [answers, setAnswers] = useState(answersMemo ? answersMemo : [])
+    const [questionQuantity, setQuestionsQuantity] = useState(quantityMemo ? quantityMemo : [])
+    const [pictureURL, setPictureURL] = useState(pictureMemo ? pictureMemo : "")
 
     const [show, setShow] = useState(false)
     const [timerInfo, setTimerInfo] = useState(false)
@@ -51,7 +58,7 @@ function TestScreen(props) {
             setAnswers(serverData.data.items[id - 1].answers)
             setQuestionsQuantity(serverData.data.items.length)
             setPictureURL(serverData.data.items[id - 1].picture)
-            localStorage.setItem("testData", JSON.stringify(serverData))
+            localStorage.setItem("serverData", JSON.stringify(serverData))
         })
         .catch(resp => {
             console.log(resp)
@@ -117,7 +124,7 @@ function TestScreen(props) {
 
     function finishTest() {
         localStorage.removeItem("testRunning");
-        localStorage.removeItem("testData")
+        localStorage.removeItem("serverData")
 
         const apiUrl = API_URLS.FINISH_TEST;
         let config = {

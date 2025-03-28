@@ -10,6 +10,7 @@ export function Profile() {
     const [regDate, setRegDate] = useState("")
     const [name, setName] = useState("")
     const [testList, setTestList] = useState([])
+    const [runningTest, setRunningTest] = useState(false)
     const [noToken, setNoToken] = useState(false)
 
     useEffect(() => {
@@ -44,6 +45,31 @@ export function Profile() {
         else {
             setNoToken(true)
         }
+        
+    }, [])
+
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem("accessToken"))) {
+            const apiUrl = API_URLS.GET_TEST_SESSION;
+            let config = {
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Auth-Token": JSON.parse(localStorage.getItem("accessToken"))
+                }
+            }
+            axios.get(apiUrl,
+                config
+            )
+            .then(resp => {
+                const serverData = resp.data;
+                setRunningTest(serverData.data.test_id)
+            })
+            .catch(resp => {
+                console.log(resp)
+            })
+
+            }
+       
         
     }, [])
 
@@ -108,6 +134,7 @@ export function Profile() {
                 <Table dataSource={dataSource} columns={columns} pagination={false}/>
 
                 <a className="btn btn-danger" href="/logout/">Выйти</a>
+                {runningTest && <a className="btn btn-success" href={`/card/${runningTest}/1/`}>Продожить попытку</a>}
             </div>   
         )
     }

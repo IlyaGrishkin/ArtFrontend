@@ -29,7 +29,7 @@ const App = () => {
   }, [])
   setInterval(() => handleToken(), 100000)
   return (
-    <div className='app-wrapper'>
+    <div className='app-wrapper container border-start border-end'>
       <BrowserRouter>
         <AppNavbar />
 

@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import './Home.css'
-import { Checkbox } from 'antd'
+import { Checkbox, ConfigProvider } from 'antd'
 import { API_URLS, BootstrapBreakpoints, questionsNumber, questionsNumberStrToNum, startTest, testDurations, testDurationsStrToNums, topics } from '../Utils/constants'
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Card } from 'react-bootstrap';
 import axios from 'axios';
-import { MyVerticallyCenteredModal, NotificationModal } from '../Modal/Modal';
+import { MyVerticallyCenteredModal } from '../Modal/Modal';
 import { motion } from "motion/react"
 import BasicPagination from '../MuiPagination/MuiPagination';
+import testImage from './test-img.png'
+import timeImage from './time-svgrepo-com (2).svg'
+import quantityImg from './pen-new-square-svgrepo-com.svg'
 
 export function Home() {
     if (!JSON.parse(localStorage.getItem("filterActive"))) {
@@ -173,7 +176,7 @@ export function Home() {
         }
         setCheckedTopic(newChecked)
         setTestList(newTestList)
-        const newShownTestList = newTestList.slice(0, MAX_CARDS )
+        const newShownTestList = newTestList.slice(0, MAX_CARDS)
         setShownTestList(newShownTestList)
         setPage(1)
     }
@@ -248,12 +251,12 @@ export function Home() {
             setShownTestList(testList.slice(0, MAX_CARDS))
             setAllTests(serverData.data.items)
         })
-        .catch(resp => {
-            console.log(resp)
-        })
+            .catch(resp => {
+                console.log(resp)
+            })
     }, [])
 
-    
+
 
 
     function handleTestStart(testID) {
@@ -363,64 +366,64 @@ export function Home() {
                     </div>
                     <div className="row">
 
-                    {shownTestList.length > 0 ? shownTestList.map((test) =>
-                                    <motion.div className={normalStyle}
-                                        initial={
-                                            {
-                                                y: 100,
-                                                opacity: 0
-                                            }
-                                        }
-                                        animate={
-                                            {
-                                                y: 0,
-                                                opacity: 1,
-                                                transition: {duration: 0.5}
-                                            }}
-                                        whileHover={{
-                                            y: -3,
-                                            transition: { duration: 0.1 }
-                                        }}
-                                    >
-                                        <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '22rem', margin: 0, height: 480 + 'px'}} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
-                                            <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
-                                            <Card.Body>
-                                                <Card.Title className='card-title'>{test.title}</Card.Title>
-                                                <Card.Text>
-                                                    {test.description}
-                                                </Card.Text>
-                                                <Card.Text>
-                                                    <div className='timeInfo'>
-                                                        <p>Время: {test.work_time} мин</p>
-                                                         
-                                                    </div>
+                        {shownTestList.length > 0 ? shownTestList.map((test) =>
+                            <motion.div className={normalStyle}
+                                initial={
+                                    {
+                                        y: 100,
+                                        opacity: 0
+                                    }
+                                }
+                                animate={
+                                    {
+                                        y: 0,
+                                        opacity: 1,
+                                        transition: { duration: 0.5 }
+                                    }}
+                                whileHover={{
+                                    y: -3,
+                                    transition: { duration: 0.1 }
+                                }}
+                            >
+                                <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '22rem', margin: 0, height: 480 + 'px' }} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
+                                    <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
+                                    <Card.Body>
+                                        <Card.Title className='card-title'>{test.title}</Card.Title>
+                                        <Card.Text>
+                                            {test.description}
+                                        </Card.Text>
+                                        <Card.Text>
+                                            <div className='timeInfo'>
+                                                <p>Время: {test.work_time} мин</p>
+                                                <img src='DRF_React\frontend\public\time-svgrepo-com.svg'/>
+                                            </div>
 
-                                                    <div className='questionsInfo'>
-                                                        <p>Количество вопросов: {test.question_count}</p>
-                                                        
-                                                    </div>
+                                            <div className='questionsInfo'>
+                                                <p>Количество вопросов: {test.question_count}</p>
 
-
-                                                </Card.Text>
-                                            </Card.Body>
-
-                                        </Card>
+                                            </div>
 
 
-                                        <MyVerticallyCenteredModal
-                                            show={modalShow}
-                                            onHide={() => setModalShow(false)}
-                                            testName={title}
-                                            onTestStart={() => handleTestStart(readyToStart)}
-                                        />
-                                    </motion.div>
+                                        </Card.Text>
+                                    </Card.Body>
 
-                                ) : <h4>{onUnfound}</h4>}
+                                </Card>
+
+
+                                <MyVerticallyCenteredModal
+                                    show={modalShow}
+                                    onHide={() => setModalShow(false)}
+                                    testName={title}
+                                    onTestStart={() => handleTestStart(readyToStart)}
+                                />
+                            </motion.div>
+
+                        ) : <h4>{onUnfound}</h4>}
 
                     </div>
                 </div>
                 <div className='my-5 d-flex justify-content-center'>
-                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange}/>
+                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange} />
                 </div>
 
 
@@ -441,39 +444,73 @@ export function Home() {
     else {
         return (
             <div className="home-wrapper-large">
-                <div className="container-fluid h-75">
-                    <div className="row mb-4">
-                        <div className="col-12 d-flex justify-content-center">
-                            <h1>Тесты</h1>
-                        </div>
+                <div className="container-fluid p-0 m-0 test-img-wrap">
+                    <img src={testImage} className='test-img p-0 m-0 w-100' />
+                    <div className='overlay-text'>
+                        <h1 className='text-center'>Тесты</h1>
+                        <p className='fs-4 text-grey'>Решайте наши разнообразные тесты и становитесь эрудированнее</p>
                     </div>
-                    <div className="row">
-                        <div className="col-4 col-xl-3">
+                    
+                </div>
+                <div className="container-fluid h-75">
+
+                    <div className="row ps-3">
+                        <div className="col-3 col-xl-2">
                             <div className='sidebar'>
 
 
                                 <div className='topic-wrapper'>
                                     <h4>Тема</h4>
-                                    <ul>
-                                        {topics.TOPICS.map(t => <li className='filter-item'><Checkbox className="checkbox" checked={checkedTopic[t]} onChange={() => handleChangeTopic(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                    <ul className='filter-ul'>
+                                        {topics.TOPICS.map(t => <li className='filter-item'>
+                                            <ConfigProvider
+                                                theme={{
+                                                    token: {
+                                                        colorPrimary: '00AE%B' // your color
+                                                    }
+                                                }}
+                                            >
+                                                <Checkbox className="checkbox" checked={checkedTopic[t]} onChange={() => handleChangeTopic(t)} inputProps={{ 'aria-label': 'controlled' }} />
+
+                                            </ConfigProvider>
+                                            {' ' + t} </li>)}
                                     </ul>
                                 </div>
                                 <div className='duration-wrapper'>
                                     <h4>Длительность</h4>
-                                    <ul>
-                                        {testDurations.map(t => <li className='filter-item'><Checkbox className="checkbox" checked={checkedDuration[t]} onChange={() => handleChangeDuration(t)} inputProps={{ 'aria-label': 'controlled' }} /> {t} </li>)}
+                                    <ul className='filter-ul'>
+                                        {testDurations.map(t => <li className='filter-item'>
+                                            <ConfigProvider
+                                                theme={{
+                                                    token: {
+                                                        colorPrimary: '00AE%B' // your color
+                                                    }
+                                                }}
+                                            >
+                                                <Checkbox className="checkbox" checked={checkedDuration[t]} onChange={() => handleChangeDuration(t)} inputProps={{ 'aria-label': 'controlled' }} />
+                                            </ConfigProvider> {t} </li>)}
+                                            
                                     </ul>
                                 </div>
                                 <div className='number-wrapper'>
                                     <h4>Количество вопросов</h4>
-                                    <ul>
-                                        {questionsNumber.map(n => <li className='filter-item'><Checkbox className="checkbox" checked={checkedNumber[n]} onChange={() => handleChangeNumber(n)} inputProps={{ 'aria-label': 'controlled' }} /> {n} </li>)}
+                                    <ul className='filter-ul'>
+                                        {questionsNumber.map(n => <li className='filter-item'>
+                                            <ConfigProvider
+                                                theme={{
+                                                    token: {
+                                                        colorPrimary: '00AE%B' // your color
+                                                    }
+                                                }}
+                                            >
+                                            <Checkbox className="checkbox" checked={checkedNumber[n]} onChange={() => handleChangeNumber(n)} inputProps={{ 'aria-label': 'controlled' }} />
+                                                </ConfigProvider> {n} </li>)}
                                     </ul>
                                 </div>
 
                             </div>
                         </div>
-                        <div className="col-8">
+                        <div className="col-9 col-xl-10">
                             <div className="row">
                                 {shownTestList.length > 0 ? shownTestList.map((test) =>
                                     <motion.div className={normalStyle}
@@ -487,14 +524,14 @@ export function Home() {
                                             {
                                                 y: 0,
                                                 opacity: 1,
-                                                transition: {duration: 0.5}
+                                                transition: { duration: 0.5 }
                                             }}
                                         whileHover={{
                                             y: -3,
                                             transition: { duration: 0.1 }
                                         }}
                                     >
-                                        <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '24rem', margin: 0, height: 480 + 'px'}} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
+                                        <Card className="card mb-4 home-card-wrap p-0" style={{ cursor: "pointer", maxWidth: '24rem', margin: 0, height: 480 + 'px' }} onClick={() => { setTitle(test.title); setModalShow(true); setReadyToStart(test.id) }}>
                                             <Card.Img variant="top" src={test.picture ? "http://127.0.0.1:8000" + test.picture : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
                                             <Card.Body>
                                                 <Card.Title className='card-title'>{test.title}</Card.Title>
@@ -502,14 +539,14 @@ export function Home() {
                                                     {test.description}
                                                 </Card.Text>
                                                 <Card.Text>
-                                                    <div className='timeInfo'>
+                                                    <div className='timeInfo d-flex'>
                                                         <p>Время: {test.work_time} мин</p>
-                                                         
+                                                        <img src={timeImage} width={20 + 'px'} className='pb-3 mx-2'/>
                                                     </div>
 
-                                                    <div className='questionsInfo'>
+                                                    <div className='questionsInfo d-flex'>
                                                         <p>Количество вопросов: {test.question_count}</p>
-                                                        
+                                                        <img src={quantityImg} width={20 + 'px'} className='pb-3 mx-2'/>
                                                     </div>
 
 
@@ -529,12 +566,12 @@ export function Home() {
 
                                 ) : <h4>{onUnfound}</h4>}
                             </div>
-                        
+
                         </div>
                     </div>
                 </div>
                 <div className='my-5 d-flex justify-content-center'>
-                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange}/>
+                    <BasicPagination totalCards={testList.length} maxCards={MAX_CARDS} page={page} handleChange={handleChange} />
                 </div>
             </div>
         )

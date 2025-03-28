@@ -86,7 +86,7 @@ export function ViewingCard() {
                     <Card className='my-3'  >
 
                         <div>
-                            <Card.Img variant="top" src={pictureURL ? SERVER_HOST + pictureURL : "https://dev-education.apkpro.ru/media/news_image/e0d1d096-0f66-4cc9-a181-5cf9b2f27d9f.jpg"} />
+                            <Card.Img variant="top" src={pictureURL ? SERVER_HOST + pictureURL : "https://avatars.mds.yandex.net/i?id=dc7cbd3877e56749ab41a0fcc5145434_l-5231880-images-thumbs&n=13"} />
                             <Card.Body>
                                 <Card.Title>{ }</Card.Title>
                                 <Card.Text>
