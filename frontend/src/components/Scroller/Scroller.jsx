@@ -18,8 +18,9 @@ export const ScrollableList = ({ items }) => {
     };
 
 
-    const handleDragEnd = () => {
+    const handleDragEnd = (e) => {
         listRef.current.isDragging = false;
+        
     };
 
     const handleDragMove = (e) => {
@@ -55,8 +56,9 @@ export const ScrollableList = ({ items }) => {
             style={{
                 display: 'flex',
                 overflowX: 'hidden',
-                height: "350px",
+                height: "440px",
                 cursor: 'grab',
+                alignItems: 'center'
             }}
         >
             {items.map((item, index) => (

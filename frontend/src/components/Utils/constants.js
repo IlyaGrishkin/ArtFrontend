@@ -53,7 +53,8 @@ export const URLS = {
     TEST_RESULT: "http://localhost:3000/0/results/",
     LOGIN_CHECK: "http://localhost:3000/login/check/",
     SIGNUP: "http://localhost:3000/signup/",
-    SIGNUP_CONFIRM: "http://localhost:3000/signup/confirm/"
+    SIGNUP_CONFIRM: "http://localhost:3000/signup/confirm/",
+    GUIDE_CARDS: "http://localhost:3000/guide-cards/"
 }
 
 
